@@ -16,8 +16,8 @@ public class UserService {
     @Autowired
     UserRepository userRepository;
 
-    public User getUser(UserDTO userDTO) {
-        Optional<User> optionalUser = userRepository.findById(userDTO.getUserEntryNo());
+    public User getUser(Long userEntryNo) {
+        Optional<User> optionalUser = userRepository.findById(userEntryNo);
         if (!optionalUser.isPresent())
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "존재하지 않는 유저입니다.");
         return optionalUser.get();
@@ -35,5 +35,10 @@ public class UserService {
                 .build();
 
         return userRepository.save(user);
+    }
+
+    public Long deleteUser(Long no) {
+        userRepository.deleteById(no);
+        return no;
     }
 }

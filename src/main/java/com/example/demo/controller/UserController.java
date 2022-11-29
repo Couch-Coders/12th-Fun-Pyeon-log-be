@@ -13,14 +13,19 @@ public class UserController {
     @Autowired
     UserService userService;
 
-    @GetMapping("")
-    public User getUser(@RequestBody UserDTO userDTO){
-        return userService.getUser(userDTO);
+    @GetMapping("/{no}")
+    public User getUser(@PathVariable Long no){
+        return userService.getUser(no);
     }
 
     @PostMapping("")
     public User insertUser(@RequestBody UserDTO userDTO){
         return userService.addUser(userDTO);
+    }
+
+    @DeleteMapping("/{no}")
+    public Long deleteUser(@PathVariable Long no){
+        return userService.deleteUser(no);
     }
 
 }
