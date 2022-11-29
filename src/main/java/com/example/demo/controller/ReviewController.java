@@ -12,11 +12,6 @@ public class ReviewController {
     @Autowired
     ReviewService reviewService;
 
-//    @GetMapping("")
-//    public List<Review> getReviews(){
-//        return reviewService.getReviews();
-//    }
-
     @PostMapping("")
     public String addReview(@RequestBody ReviewDTO reviewDTO,
                             @PathVariable String storeId){
