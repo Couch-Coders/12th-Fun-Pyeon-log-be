@@ -8,7 +8,7 @@ import java.util.Date;
 
 @Getter
 @Entity
-public class Review {
+public class Review extends BaseTimeEntity {
     @Id
     @GeneratedValue
     Long reviewEntryNo;
@@ -17,13 +17,7 @@ public class Review {
     String reviewContent;
 
     @Column
-    int startCount;
-
-    @Column
-    Date createdDate;
-
-    @Column
-    Date modifiedDate;
+    Integer startCount;
 
     @Column
     String storeId;
