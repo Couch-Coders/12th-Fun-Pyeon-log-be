@@ -24,7 +24,7 @@ public class UserService {
     }
 
     public User addUser(UserDTO userDTO) {
-        Optional<User> optionalUser = userRepository.findById(userDTO.getUserEntryNo());
+        Optional<User> optionalUser = userRepository.findByEmail(userDTO.getEmail());
         if (optionalUser.isPresent())
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "존재하는 유저입니다.");
 
