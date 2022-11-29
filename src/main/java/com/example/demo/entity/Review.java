@@ -1,11 +1,12 @@
 package com.example.demo.entity;
 
 import lombok.Data;
+import lombok.Getter;
 
 import javax.persistence.*;
 import java.util.Date;
 
-@Data
+@Getter
 @Entity
 public class Review {
     @Id

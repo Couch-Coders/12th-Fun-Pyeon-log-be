@@ -1,10 +1,11 @@
 package com.example.demo.entity;
 
 import lombok.Data;
+import lombok.Getter;
 
 import javax.persistence.*;
 
-@Data
+@Getter
 @Entity
 public class Keyword {
 
@@ -15,7 +16,7 @@ public class Keyword {
     @Column
     String storeId;
 
-    @OneToOne
+    @ManyToOne
     @JoinColumn(name = "keyword_no")
     KeywordContent keywordContent;
 
