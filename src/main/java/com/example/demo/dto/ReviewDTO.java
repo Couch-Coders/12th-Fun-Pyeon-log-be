@@ -2,6 +2,7 @@ package com.example.demo.dto;
 
 import lombok.Data;
 
+import java.time.LocalDateTime;
 import java.util.Date;
 
 
@@ -9,9 +10,9 @@ import java.util.Date;
 public class ReviewDTO {
     Long reviewEntryNo;
     String reviewContent;
-    int startCount;
-    Date createdDate;
-    Date modifiedDate;
+    Integer startCount;
+    LocalDateTime createdDate;
+    LocalDateTime modifiedDate;
     String storeId;
 
     public ReviewDTO() {

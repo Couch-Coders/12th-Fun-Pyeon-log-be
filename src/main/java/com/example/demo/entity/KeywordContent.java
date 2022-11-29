@@ -12,7 +12,7 @@ import javax.persistence.Id;
 @Entity
 public class KeywordContent {
     @Id @GeneratedValue
-    int keywordNo;
+    Integer keywordNo;
     String keywordContent;
 
     @Builder
