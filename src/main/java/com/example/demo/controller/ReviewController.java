@@ -1,12 +1,9 @@
 package com.example.demo.controller;
 
 import com.example.demo.dto.ReviewDTO;
-import com.example.demo.entity.Review;
 import com.example.demo.service.ReviewService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @RestController
 @RequestMapping("/stores/{storeId}/reviews")
