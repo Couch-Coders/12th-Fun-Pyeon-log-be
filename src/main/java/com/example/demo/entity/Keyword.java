@@ -1,5 +1,6 @@
 package com.example.demo.entity;
 
+import lombok.Builder;
 import lombok.Data;
 import lombok.Getter;
 
@@ -28,4 +29,15 @@ public class Keyword {
     @JoinColumn(name = "review_entry_no")
     Review review;
 
+    @Builder
+    public Keyword(Long keywordEntryNo, String storeId, KeywordContent keywordContent, User user, Review review) {
+        this.keywordEntryNo = keywordEntryNo;
+        this.storeId = storeId;
+        this.keywordContent = keywordContent;
+        this.user = user;
+        this.review = review;
+    }
+
+    public Keyword() {
+    }
 }
