@@ -17,32 +17,18 @@ public class StoreService {
 
     public List<StoreDTO> getStoreSummaries(String[] storeIds) {
         List<StoreDTO> storeDTOList = new ArrayList<>();
-
         for (String storeId : storeIds) {
-            List<Review> reviewList = reviewRepository.findAllByStoreId(storeId);
-            if (reviewList == null)
-                continue;
+            StoreDTO storeDTO = getStoreSummary(storeId);
 
-            OptionalDouble averageOfStar = reviewList.stream()
-                    .mapToDouble(Review::getStarCount)
-                    .average();
+            int sizeLimit = 3;
+            int keywordCount = storeDTO.getKeywordList().size();
 
-            Double starCount = averageOfStar.isPresent() ? averageOfStar.getAsDouble() : 0.0;
-            Integer reviewCount = reviewList.size();
-
-            List<String> bestKeywords;
-            bestKeywords = getBestKeywordInReviewList(reviewList);
-
-            StoreDTO storeDTO = StoreDTO.builder()
-                    .id(storeId)
-                    .starCount(starCount)
-                    .reviewCount(reviewCount)
-                    .keywordList(bestKeywords)
-                    .build();
+            storeDTO.setKeywordList(storeDTO.getKeywordList().subList(0,keywordCount));
+            if (keywordCount >= sizeLimit)
+                storeDTO.setKeywordList(storeDTO.getKeywordList().subList(0,sizeLimit));
 
             storeDTOList.add(storeDTO);
         }
-
         return storeDTOList;
     }
 
@@ -77,5 +63,22 @@ public class StoreService {
         }
     }
 
+    public StoreDTO getStoreSummary(String storeId) {
+        List<Review> reviewList = reviewRepository.findAllByStoreId(storeId);
+        OptionalDouble averageOfStar = reviewList.stream()
+                .mapToDouble(Review::getStarCount)
+                .average();
 
+        Double starCount = averageOfStar.isPresent() ? averageOfStar.getAsDouble() : 0.0;
+        Integer reviewCount = reviewList.size();
+
+        List<String> bestKeywords = getBestKeywordInReviewList(reviewList);
+
+        return StoreDTO.builder()
+                .id(storeId)
+                .starCount(starCount)
+                .reviewCount(reviewCount)
+                .keywordList(bestKeywords)
+                .build();
+    }
 }
