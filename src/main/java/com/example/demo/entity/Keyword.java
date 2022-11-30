@@ -21,11 +21,11 @@ public class Keyword {
     @JoinColumn(name = "keyword_no")
     KeywordContent keywordContent;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_entry_no")
     User user;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "review_entry_no")
     Review review;
 
