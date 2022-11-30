@@ -20,9 +20,21 @@ public class KeywordInsertRunner implements ApplicationRunner {
 
     public KeywordInsertRunner() {
         keywords = new ArrayList<>();
-        keywords.add("분위기가 좋아요");
+        keywords.add("제품이 다양해요");
+        keywords.add("트렌디한 상품이 많아요");
+        keywords.add("자체상품이 좋아요");
+        keywords.add("커피머신이 있어요");
+        keywords.add("행사상품이 다양해요");
+        keywords.add("직원이 친절해요");
+        keywords.add("매장이 청결해요");
+        keywords.add("뷰가 좋아요");
+        keywords.add("혼밥하기 좋아요");
         keywords.add("매장이 넓어요");
         keywords.add("접근성이 좋아요");
+        keywords.add("테이블이 많아요");
+        keywords.add("택배이용이 편리해요");
+        keywords.add("취식공간이 잘 되어있어요");
+        keywords.add("주차하기 편해요");
     }
 
     @Override
