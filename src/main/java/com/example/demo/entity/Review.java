@@ -22,7 +22,7 @@ public class Review extends BaseTimeEntity {
     @Column
     String storeId;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_entry_no")
     User user;
 
@@ -37,5 +37,8 @@ public class Review extends BaseTimeEntity {
         this.storeId = storeId;
         this.user = user;
         this.keywords = keywords;
+    }
+
+    public Review() {
     }
 }
