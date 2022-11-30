@@ -3,13 +3,11 @@ package com.example.demo.service;
 import com.example.demo.dto.StoreDTO;
 import com.example.demo.entity.Keyword;
 import com.example.demo.entity.Review;
-import com.example.demo.repository.KeywordRepository;
 import com.example.demo.repository.ReviewRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
-import java.util.stream.Stream;
 
 @Service
 public class StoreService {
@@ -25,11 +23,11 @@ public class StoreService {
             if (reviewList == null)
                 continue;
 
-            Double starAverage = reviewList.stream()
+            OptionalDouble averageOfStar = reviewList.stream()
                     .mapToDouble(Review::getStarCount)
-                    .average()
-                    .getAsDouble();
+                    .average();
 
+            Double starCount = averageOfStar.isPresent() ? averageOfStar.getAsDouble() : 0.0;
             Integer reviewCount = reviewList.size();
 
             List<String> bestKeywords;
@@ -37,7 +35,7 @@ public class StoreService {
 
             StoreDTO storeDTO = StoreDTO.builder()
                     .id(storeId)
-                    .starCount(starAverage)
+                    .starCount(starCount)
                     .reviewCount(reviewCount)
                     .keywordList(bestKeywords)
                     .build();
@@ -59,7 +57,7 @@ public class StoreService {
         for (String keyword : keywordMap.keySet())
             bestKeywords.add(keyword);
 
-        Collections.sort(bestKeywords, Comparator.comparingInt(keywordMap::get));
+        Collections.sort(bestKeywords, (k1, k2) -> keywordMap.get(k2) - keywordMap.get(k1));
         return bestKeywords;
     }
 
