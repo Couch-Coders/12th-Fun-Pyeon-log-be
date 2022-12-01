@@ -23,6 +23,13 @@ public class StoreDTO {
         this.keywordList = keywordList;
     }
 
+    public void setKeywordList(List<String> keywordList, int keywordsSizeLimit) {
+        int keywordsSize = keywordList.size();
+        int cutCount = keywordsSizeLimit > keywordsSize ? keywordsSize : keywordsSizeLimit;
+        keywordList.subList(0, cutCount);
+        this.keywordList = keywordList;
+    }
+
     public StoreDTO() {
     }
 }

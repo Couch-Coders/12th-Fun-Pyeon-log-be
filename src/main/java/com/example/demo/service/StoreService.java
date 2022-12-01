@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
+import java.util.stream.Stream;
 
 @Service
 public class StoreService {
@@ -17,16 +18,14 @@ public class StoreService {
 
     public List<StoreDTO> getStoreSummaries(String[] storeIds) {
         List<StoreDTO> storeDTOList = new ArrayList<>();
+        List<Review> reviewList = reviewRepository.findAllByStoreIdIn(storeIds);
+
         for (String storeId : storeIds) {
-            StoreDTO storeDTO = getStoreSummary(storeId);
+            StoreDTO storeDTO = getStoreSummary(
+                    reviewList.stream().filter(review -> review.getStoreId().equals(storeId)).toList(), storeId);
 
-            int sizeLimit = 3;
-            int keywordCount = storeDTO.getKeywordList().size();
-
-            storeDTO.setKeywordList(storeDTO.getKeywordList().subList(0,keywordCount));
-            if (keywordCount >= sizeLimit)
-                storeDTO.setKeywordList(storeDTO.getKeywordList().subList(0,sizeLimit));
-
+            int keywordsSizeLimit = 3;
+            storeDTO.setKeywordList(storeDTO.getKeywordList(), keywordsSizeLimit);
             storeDTOList.add(storeDTO);
         }
         return storeDTOList;
@@ -65,6 +64,11 @@ public class StoreService {
 
     public StoreDTO getStoreSummary(String storeId) {
         List<Review> reviewList = reviewRepository.findAllByStoreId(storeId);
+        return getStoreSummary(reviewList, storeId);
+    }
+
+
+    public StoreDTO getStoreSummary(List<Review> reviewList, String storeId) {
         OptionalDouble averageOfStar = reviewList.stream()
                 .mapToDouble(Review::getStarCount)
                 .average();
