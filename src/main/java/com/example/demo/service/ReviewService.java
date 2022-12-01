@@ -15,6 +15,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -32,7 +33,7 @@ public class ReviewService {
     public ReviewDTO createReview(ReviewDTO reviewDTO, String storeId) {
         Optional<User> optionalUser = userRepository.findById(reviewDTO.getUserEntryNo());
         if (!optionalUser.isPresent())
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "존재하지 않는 유저입니다.");
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "존재하지 않는 유저입니다!");
 
         Review review = Review.builder()
                 .reviewContent(reviewDTO.getReviewContent())
@@ -42,29 +43,34 @@ public class ReviewService {
                 .keywords(new ArrayList<>())
                 .build();
 
-        reviewRepository.save(review);
+        for (String k : reviewDTO.getKeywords()) {
+            Optional<KeywordContent> optionalContent = keywordContentRepository.findByKeywordContent(k);
+            if (!optionalContent.isPresent())
+                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "존재하지 않는 키워드입니다!");
 
-        for (String msg : reviewDTO.getKeywords()) {
-            Optional<KeywordContent> optionalKeywordContent = keywordContentRepository.findByKeywordContent(msg);
-            if (!optionalKeywordContent.isPresent())
-                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "존재하지 않는 키워드입니다.");
-
+            KeywordContent keywordContent = optionalContent.get();
             Keyword keyword = Keyword.builder()
-                    .keywordContent(optionalKeywordContent.get())
-                    .storeId(storeId)
-                    .user(optionalUser.get())
                     .review(review)
+                    .user(optionalUser.get())
+                    .storeId(storeId)
+                    .keywordContent(keywordContent)
                     .build();
-
             review.getKeywords().add(keyword);
-            keywordRepository.save(keyword);
         }
 
-        reviewDTO.setReviewEntryNo(review.getReviewEntryNo());
-        reviewDTO.setStoreId(storeId);
-        reviewDTO.setCreatedDate(review.getCreatedDate());
-        reviewDTO.setModifiedDate(review.getModifiedDate());
+        reviewRepository.save(review);
+        keywordRepository.saveAll(review.getKeywords());
 
         return reviewDTO;
+    }
+
+    public List<Review> getReviews(String storeId) {
+        List<Review> reviewList = reviewRepository.findByStoreId(storeId);
+        List<ReviewDTO> reviewDTOS = new ArrayList<>();
+        for (Review r : reviewList) {
+            reviewDTOS.add(ReviewDTO)
+        }
+
+        return null;
     }
 }
