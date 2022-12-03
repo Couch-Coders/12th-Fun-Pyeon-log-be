@@ -1,5 +1,6 @@
 package com.example.demo.dto;
 
+import com.example.demo.entity.StoreSummary;
 import lombok.Builder;
 import lombok.Data;
 
@@ -18,6 +19,13 @@ public class StoreSummaryDTO {
         this.StarCount = starCount;
         this.reviewCount = reviewCount;
         this.keywordList = keywordList;
+    }
+
+    public StoreSummaryDTO(StoreSummary storeSummary) {
+        this.storeId = storeSummary.getStoreId();
+        this.StarCount = storeSummary.getStarRate();
+        this.reviewCount = storeSummary.getReviewCount();
+        this.keywordList = storeSummary.getKeywordContents(3);
     }
 
     public void setKeywordList(List<String> keywordList, int keywordsSizeLimit) {
