@@ -1,34 +1,40 @@
 package com.example.demo.service;
 
-import com.example.demo.dto.StoreDTO;
+import com.example.demo.dto.StoreSummaryDTO;
 import com.example.demo.entity.Keyword;
 import com.example.demo.entity.Review;
+import com.example.demo.entity.StoreSummary;
 import com.example.demo.repository.ReviewRepository;
+import com.example.demo.repository.StoreSummaryRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
-import java.util.stream.Stream;
 
 @Service
 public class StoreService {
 
     @Autowired
     ReviewRepository reviewRepository;
+    @Autowired
+    StoreSummaryRepository storeSummaryRepository;
 
-    public List<StoreDTO> getStoreSummaries(String[] storeIds) {
-        List<StoreDTO> storeDTOList = new ArrayList<>();
-        List<Review> reviewList = reviewRepository.findAllByStoreIdIn(storeIds);
+    public List<StoreSummaryDTO> getStoreSummaries(String[] storeIds) {
+        List<StoreSummary> storeSummaries = storeSummaryRepository.findAllByStoreIdIn(storeIds);
+        List<StoreSummaryDTO> storeSummaryDTOS = new ArrayList<>();
 
-        for (String storeId : storeIds) {
-            StoreDTO storeDTO = getStoreSummary(
-                    reviewList.stream().filter(review -> review.getStoreId().equals(storeId)).toList(), storeId);
-
-            int keywordsSizeLimit = 3;
-            storeDTO.setKeywordList(storeDTO.getKeywordList(), keywordsSizeLimit);
-            storeDTOList.add(storeDTO);
+        for (StoreSummary storeSummary : storeSummaries) {
+            storeSummary.sortByKeywordCount();
+            StoreSummaryDTO storeSummaryDTO = StoreSummaryDTO.builder()
+                    .storeId(storeSummary.getStoreId())
+                    .reviewCount(storeSummary.getReviewCount())
+                    .starCount(storeSummary.getStarRate())
+                    .keywordList(storeSummary.getKeywordContents(3))
+                    .build();
+            storeSummaryDTOS.add(storeSummaryDTO);
         }
-        return storeDTOList;
+
+        return storeSummaryDTOS;
     }
 
     public List<String> getBestKeywordInReviewList(List<Review> reviewList) {
@@ -53,7 +59,7 @@ public class StoreService {
         return keywords;
     }
 
-    public void countKeyword(Map<String, Integer> map, List<String> keywords){
+    public void countKeyword(Map<String, Integer> map, List<String> keywords) {
         for (String k : keywords) {
             if (!map.containsKey(k))
                 map.put(k, 1);
@@ -62,27 +68,23 @@ public class StoreService {
         }
     }
 
-    public StoreDTO getStoreSummary(String storeId) {
-        List<Review> reviewList = reviewRepository.findAllByStoreId(storeId);
-        return getStoreSummary(reviewList, storeId);
-    }
+    public StoreSummaryDTO getStoreSummary(String storeId) {
+        Optional<StoreSummary> optionalStoreSummary = storeSummaryRepository.findById(storeId);
+        if (!optionalStoreSummary.isPresent())
+            return StoreSummaryDTO.builder()
+                    .storeId(storeId)
+                    .build();
 
+        StoreSummary storeSummary = optionalStoreSummary.get();
+        storeSummary.sortByKeywordCount();
 
-    public StoreDTO getStoreSummary(List<Review> reviewList, String storeId) {
-        OptionalDouble averageOfStar = reviewList.stream()
-                .mapToDouble(Review::getStarCount)
-                .average();
-
-        Double starCount = averageOfStar.isPresent() ? averageOfStar.getAsDouble() : 0.0;
-        Integer reviewCount = reviewList.size();
-
-        List<String> bestKeywords = getBestKeywordInReviewList(reviewList);
-
-        return StoreDTO.builder()
-                .id(storeId)
-                .starCount(starCount)
-                .reviewCount(reviewCount)
-                .keywordList(bestKeywords)
+        StoreSummaryDTO storeSummaryDTO = StoreSummaryDTO.builder()
+                .storeId(storeSummary.getStoreId())
+                .reviewCount(storeSummary.getReviewCount())
+                .starCount(storeSummary.getStarRate())
+                .keywordList(storeSummary.getKeywordContents(3))
                 .build();
+
+        return storeSummaryDTO;
     }
 }
