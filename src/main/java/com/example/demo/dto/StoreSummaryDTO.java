@@ -1,23 +1,20 @@
 package com.example.demo.dto;
 
-import com.example.demo.entity.Keyword;
 import lombok.Builder;
 import lombok.Data;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Data
-public class StoreDTO {
-    String id;
+public class StoreSummaryDTO {
+    String storeId;
     Double StarCount;
-    Integer reviewCount;
-
+    Long reviewCount;
     List<String> keywordList;
 
     @Builder
-    public StoreDTO(String id, Double starCount, Integer reviewCount, List<String> keywordList) {
-        this.id = id;
+    public StoreSummaryDTO(String storeId, Double starCount, Long reviewCount, List<String> keywordList) {
+        this.storeId = storeId;
         this.StarCount = starCount;
         this.reviewCount = reviewCount;
         this.keywordList = keywordList;
@@ -30,6 +27,6 @@ public class StoreDTO {
         this.keywordList = keywordList;
     }
 
-    public StoreDTO() {
+    public StoreSummaryDTO() {
     }
 }
