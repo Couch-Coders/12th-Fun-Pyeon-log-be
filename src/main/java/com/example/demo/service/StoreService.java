@@ -32,22 +32,9 @@ public class StoreService {
     }
 
     public StoreSummaryDTO getStoreSummary(String storeId) {
-        Optional<StoreSummary> optionalStoreSummary = storeSummaryRepository.findById(storeId);
-        if (!optionalStoreSummary.isPresent())
-            return StoreSummaryDTO.builder()
-                    .storeId(storeId)
-                    .build();
-
-        StoreSummary storeSummary = optionalStoreSummary.get();
+        StoreSummary storeSummary = storeSummaryRepository.findById(storeId)
+                .orElseGet(() -> new StoreSummary(storeId));
         storeSummary.sortByKeywordCount();
-
-        StoreSummaryDTO storeSummaryDTO = StoreSummaryDTO.builder()
-                .storeId(storeSummary.getStoreId())
-                .reviewCount(storeSummary.getReviewCount())
-                .starCount(storeSummary.getStarRate())
-                .keywordList(storeSummary.getKeywordContents(3))
-                .build();
-
-        return storeSummaryDTO;
+        return new StoreSummaryDTO(storeSummary);
     }
 }
