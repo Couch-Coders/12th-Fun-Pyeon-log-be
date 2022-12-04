@@ -8,12 +8,5 @@ import java.util.List;
 
 @Repository
 public interface ReviewRepository extends JpaRepository<Review, Long> {
-<<<<<<< HEAD
     List<Review> findByStoreId(String storeId);
-=======
-    List<Review> findAllByStoreId(String storeId);
-
-    List<Review> findAllByStoreIdIn(String[] storeIds);
-
->>>>>>> develop
 }
