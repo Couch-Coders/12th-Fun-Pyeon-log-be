@@ -5,7 +5,9 @@ import com.example.demo.entity.StoreSummary;
 import com.example.demo.repository.ReviewRepository;
 import com.example.demo.repository.StoreSummaryRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -33,7 +35,7 @@ public class StoreService {
 
     public StoreSummaryDTO getStoreSummary(String storeId) {
         StoreSummary storeSummary = storeSummaryRepository.findById(storeId)
-                .orElseGet(() -> new StoreSummary(storeId));
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "존재하지 않는 편의점입니다."));
         storeSummary.sortByKeywordCount();
         return new StoreSummaryDTO(storeSummary);
     }
