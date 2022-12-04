@@ -14,6 +14,7 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 
@@ -46,6 +47,7 @@ class StoreControllerTest {
     }
 
     @Test
+    @Transactional
     public void storeSummary() throws Exception {
         mockMvc.perform(get("/stores/store-1"))
                 .andExpect(status().isOk())
