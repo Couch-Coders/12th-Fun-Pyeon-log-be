@@ -1,7 +1,6 @@
 package com.example.demo.entity;
 
 import lombok.Builder;
-import lombok.Data;
 import lombok.Getter;
 
 import javax.persistence.*;
@@ -14,7 +13,6 @@ public class Keyword {
     @GeneratedValue
     Long keywordEntryNo;
 
-    @Column
     String storeId;
 
     @ManyToOne
