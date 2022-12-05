@@ -12,6 +12,7 @@ import com.example.demo.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.util.ArrayList;
@@ -30,47 +31,40 @@ public class ReviewService {
     @Autowired
     KeywordContentRepository keywordContentRepository;
 
-    public ReviewDTO createReview(ReviewDTO reviewDTO, String storeId) {
-        Optional<User> optionalUser = userRepository.findById(reviewDTO.getUserEntryNo());
-        if (!optionalUser.isPresent())
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "존재하지 않는 유저입니다!");
+    @Transactional
+    public void createReview(ReviewDTO reviewDTO, String storeId) {
+        User user = userRepository.findById(reviewDTO.getUserEntryNo())
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST, "존재하지 않는 유저입니다!"));
 
         Review review = Review.builder()
                 .reviewContent(reviewDTO.getReviewContent())
                 .starCount(reviewDTO.getStarCount())
                 .storeId(storeId)
-                .user(optionalUser.get())
+                .user(user)
                 .keywords(new ArrayList<>())
                 .build();
+        reviewRepository.save(review);
 
         for (String k : reviewDTO.getKeywords()) {
-            Optional<KeywordContent> optionalContent = keywordContentRepository.findByKeywordContent(k);
-            if (!optionalContent.isPresent())
-                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "존재하지 않는 키워드입니다!");
+            KeywordContent keywordContent = keywordContentRepository.findByKeywordContent(k)
+                    .orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST, "존재하지 않는 키워드입니다!"));
 
-            KeywordContent keywordContent = optionalContent.get();
             Keyword keyword = Keyword.builder()
                     .review(review)
-                    .user(optionalUser.get())
+                    .user(user)
                     .storeId(storeId)
                     .keywordContent(keywordContent)
                     .build();
             review.getKeywords().add(keyword);
         }
-
-        reviewRepository.save(review);
         keywordRepository.saveAll(review.getKeywords());
-
-        return reviewDTO;
     }
 
-    public List<Review> getReviews(String storeId) {
-        List<Review> reviewList = reviewRepository.findByStoreId(storeId);
-        List<ReviewDTO> reviewDTOS = new ArrayList<>();
-        for (Review r : reviewList) {
-            reviewDTOS.add(ReviewDTO)
-        }
-
-        return null;
+    public List<ReviewDTO> getReviews(String storeId) {
+        List<Review> reviews = reviewRepository.findByStoreId(storeId);
+        List<ReviewDTO> dtos = new ArrayList<>();
+        for (Review r : reviews)
+            dtos.add(new ReviewDTO(r));
+        return dtos;
     }
 }
