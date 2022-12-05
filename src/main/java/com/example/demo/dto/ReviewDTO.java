@@ -1,10 +1,11 @@
 package com.example.demo.dto;
 
 import com.example.demo.entity.Keyword;
+import com.example.demo.entity.Review;
 import lombok.Data;
 
 import java.time.LocalDateTime;
-import java.util.Date;
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -20,5 +21,25 @@ public class ReviewDTO {
     List<String> keywords;
 
     public ReviewDTO() {
+    }
+
+    public ReviewDTO(Review review) {
+        this.reviewEntryNo = review.getReviewEntryNo();
+        this.reviewContent = review.getReviewContent();
+        this.starCount = review.getStarCount();
+        this.createdDate = review.getCreatedDate();
+        this.modifiedDate = review.getModifiedDate();
+        this.userEntryNo = review.getUser().getUserEntryNo();
+        this.storeId = review.getStoreId();
+        castKeywordsToStrings(review.getKeywords());
+    }
+
+    public void castKeywordsToStrings(List<Keyword> keywords){
+        if (keywords == null)
+            return;
+        if (this.keywords == null)
+            this.keywords = new ArrayList<>();
+        for (Keyword k : keywords)
+            this.keywords.add(k.getKeywordContent().getKeywordContent());
     }
 }
