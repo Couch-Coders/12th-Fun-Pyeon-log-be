@@ -17,8 +17,8 @@ public class ReviewController {
 
     @GetMapping("")
     public List<ReviewDTO> getReviews(@PathVariable String storeId){
-        List<Review> reviewList = reviewService.getReviews(storeId);
-        return reviewList;
+        List<ReviewDTO> reviewDTOList = reviewService.getReviews(storeId);
+        return reviewDTOList;
     }
 
     @PostMapping("")
