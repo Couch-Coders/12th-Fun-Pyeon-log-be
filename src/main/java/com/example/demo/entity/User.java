@@ -6,13 +6,11 @@ import lombok.ToString;
 
 import javax.persistence.*;
 import java.util.Date;
-import java.util.List;
 
 @Entity(name = "users")
 @Getter
 @ToString
 public class User {
-
     @Id
     @GeneratedValue
     Long userEntryNo;
@@ -33,4 +31,5 @@ public class User {
     public User() {
 
     }
+
 }
