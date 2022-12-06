@@ -5,11 +5,9 @@ import com.example.demo.entity.Keyword;
 import com.example.demo.entity.KeywordContent;
 import com.example.demo.entity.Review;
 import com.example.demo.entity.User;
-import com.example.demo.repository.KeywordContentRepository;
-import com.example.demo.repository.KeywordRepository;
-import com.example.demo.repository.ReviewRepository;
-import com.example.demo.repository.UserRepository;
+import com.example.demo.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -17,7 +15,6 @@ import org.springframework.web.server.ResponseStatusException;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class ReviewService {
@@ -58,13 +55,14 @@ public class ReviewService {
             review.getKeywords().add(keyword);
         }
         keywordRepository.saveAll(review.getKeywords());
+        updateStoreSummary(review);
     }
 
-    public List<ReviewDTO> getReviews(String storeId) {
-        List<Review> reviews = reviewRepository.findByStoreId(storeId);
-        List<ReviewDTO> dtos = new ArrayList<>();
+    public List<ReviewDTO> getReviews(String storeId, Pageable pageable) {
+        List<Review> reviews = reviewRepository.findByStoreIdOrderByModifiedDateDesc(pageable, storeId);
+        List<ReviewDTO> reviewDTOS = new ArrayList<>();
         for (Review r : reviews)
-            dtos.add(new ReviewDTO(r));
-        return dtos;
+            reviewDTOS.add(new ReviewDTO(r));
+        return reviewDTOS;
     }
 }
