@@ -14,16 +14,15 @@ import java.io.IOException;
 
 @Configuration
 public class FirebaseInitializer {
-
     Logger logger = LoggerFactory.getLogger(FirebaseInitializer.class);
 
     @Bean
     public FirebaseApp firebaseApp() throws IOException {
         logger.info("Initializing Firebase. ");
-        FileInputStream serviceAccount = new FileInputStream("./filebase.json");
+        FileInputStream serviceAccount = new FileInputStream("secureFile.json");
         FirebaseOptions options = FirebaseOptions.builder()
                 .setCredentials(GoogleCredentials.fromStream(serviceAccount))
-                .setStorageBucket("")
+                .setStorageBucket("funpyeonlog-be.appspot.com")
                 .build();
 
         FirebaseApp app = FirebaseApp.initializeApp(options);
