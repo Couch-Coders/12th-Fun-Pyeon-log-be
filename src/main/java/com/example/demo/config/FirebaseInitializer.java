@@ -22,7 +22,6 @@ public class FirebaseInitializer {
         FileInputStream serviceAccount = new FileInputStream("secureFile.json");
         FirebaseOptions options = FirebaseOptions.builder()
                 .setCredentials(GoogleCredentials.fromStream(serviceAccount))
-                .setStorageBucket("funpyeonlog-be.appspot.com")
                 .build();
 
         FirebaseApp app = FirebaseApp.initializeApp(options);
