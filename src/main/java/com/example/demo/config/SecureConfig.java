@@ -7,7 +7,9 @@ import com.google.firebase.auth.FirebaseAuth;
 import lombok.AllArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -22,12 +24,11 @@ public class SecureConfig {
 
     private FirebaseAuth firebaseAuth;
 
-    private FirebaseTokenFilter firebaseTokenFilter;
-
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         setSecurityConfigs(http);
-        http.addFilterBefore(firebaseTokenFilter,
+
+        http.addFilterBefore(new ProdFirebaseTokenFilter(userDetailsService, firebaseAuth),
                 UsernamePasswordAuthenticationFilter.class);
         return http.build();
     }
@@ -46,12 +47,11 @@ public class SecureConfig {
 
     @Bean
     public WebSecurityCustomizer webSecurityCustomizer() {
-        return web -> {
-            web.ignoring()
+        return web -> web.ignoring()
                     .antMatchers("/users/me")
                     .antMatchers("/users")
                     .antMatchers("/favicon.ico");
-        };
+
     }
 
 }
