@@ -2,6 +2,7 @@ HELP.md
 .gradle
 
 build/
+secureFile.json
 
 !gradle/wrapper/gradle-wrapper.jar
 !**/src/main/**/build/
