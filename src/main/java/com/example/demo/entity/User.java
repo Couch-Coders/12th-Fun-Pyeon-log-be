@@ -3,6 +3,8 @@ package com.example.demo.entity;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.ToString;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
@@ -13,6 +15,7 @@ import java.util.Date;
 @Entity(name = "users")
 @Getter
 @ToString
+@EntityListeners(AuditingEntityListener.class)
 public class User implements UserDetails {
     @Id
     @GeneratedValue
@@ -20,8 +23,8 @@ public class User implements UserDetails {
 
     @Column
     String email;
-    @Temporal(TemporalType.TIMESTAMP)
-    @Column
+
+    @CreatedDate
     Date registeredDate;
 
     @Builder
