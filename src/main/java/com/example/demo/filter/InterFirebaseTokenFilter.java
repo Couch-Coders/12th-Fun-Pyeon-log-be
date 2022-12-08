@@ -28,9 +28,6 @@ public class InterFirebaseTokenFilter extends FirebaseTokenFilter {
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
-        Cookie[] cookies = request.getCookies();
-        String token = findCookie(cookies, "token");
-
         String email = "dkproh@gmail.com";
 
         try {
