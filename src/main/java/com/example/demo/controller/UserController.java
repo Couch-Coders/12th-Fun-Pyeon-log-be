@@ -16,6 +16,8 @@ public class UserController {
     @GetMapping("/{no}")
     public User getUser(@PathVariable Long no){
         return userService.getUser(no);
+    @Autowired
+    AbstractAuthService authService;
     }
 
     @PostMapping("")
