@@ -28,7 +28,7 @@ public class SecureConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         setSecurityConfigs(http);
 
-        http.addFilterBefore(new ProdFirebaseTokenFilter(userDetailsService, firebaseAuth),
+        http.addFilterBefore(new InterFirebaseTokenFilter(userDetailsService, firebaseAuth),
                 UsernamePasswordAuthenticationFilter.class);
         return http.build();
     }
