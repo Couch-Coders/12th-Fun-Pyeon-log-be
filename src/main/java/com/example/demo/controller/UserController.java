@@ -13,11 +13,16 @@ public class UserController {
     @Autowired
     UserService userService;
 
-    @GetMapping("/{no}")
-    public User getUser(@PathVariable Long no){
-        return userService.getUser(no);
     @Autowired
     AbstractAuthService authService;
+
+    @GetMapping("/me")
+    public ResponseEntity<String> login(@RequestHeader("Authorization") String token) throws FirebaseAuthException {
+        FirebaseTokenDTO tokenDTO = authService.verifyIdToken(token);
+        User user = authService.loginOrEntry(tokenDTO);
+        ResponseCookie responseCookie = createCookie("token", token);
+        return ResponseEntity.ok().header(HttpHeaders.SET_COOKIE, responseCookie.toString()).body(user.getEmail());
+    }
     }
 
     @PostMapping("")
