@@ -28,6 +28,10 @@ public class UserController {
     @PostMapping("")
     public User insertUser(@RequestBody UserDTO userDTO){
         return userService.addUser(userDTO);
+    @DeleteMapping("")
+    public void deleteUser(@RequestHeader("Authorization") String token) throws FirebaseAuthException {
+        FirebaseTokenDTO tokenDTO = authService.verifyIdToken(token);
+        userService.deleteUser(tokenDTO.getEmail());
     }
 
     @DeleteMapping("/{no}")
