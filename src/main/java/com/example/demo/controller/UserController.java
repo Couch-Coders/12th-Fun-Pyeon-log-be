@@ -23,6 +23,12 @@ public class UserController {
         ResponseCookie responseCookie = createCookie("token", token);
         return ResponseEntity.ok().header(HttpHeaders.SET_COOKIE, responseCookie.toString()).body(user.getEmail());
     }
+
+    @DeleteMapping("/me")
+    public ResponseEntity<String> logout(@RequestHeader("Authorization") String token) throws FirebaseAuthException {
+        FirebaseTokenDTO tokenDTO = authService.verifyIdToken(token);
+        authService.revokeRefreshTokens(tokenDTO.getUid());
+        return ResponseEntity.ok().header(HttpHeaders.SET_COOKIE, removeCookie("token").toString()).build();
     }
 
     @PostMapping("")
