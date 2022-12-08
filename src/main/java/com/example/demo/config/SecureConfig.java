@@ -48,9 +48,10 @@ public class SecureConfig {
     @Bean
     public WebSecurityCustomizer webSecurityCustomizer() {
         return web -> web.ignoring()
-                    .antMatchers("/users/me")
-                    .antMatchers("/users")
-                    .antMatchers("/favicon.ico");
+                .antMatchers("/users/me")
+                .antMatchers("/users")
+                .antMatchers("/favicon.ico")
+                .antMatchers("/hello");
 
     }
 
