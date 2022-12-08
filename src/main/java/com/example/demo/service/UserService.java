@@ -29,12 +29,9 @@ public class UserService implements UserDetailsService {
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST, "존재하지 않는 유저입니다."));
     }
 
+    public User addUser(String email) {
         User user = User.builder()
-                .userEntryNo(userDTO.getUserEntryNo())
-                .email(userDTO.getEmail())
-                .registeredDate(new Date())
-                .build();
-
+                .email(email).build();
         return userRepository.save(user);
     }
 
