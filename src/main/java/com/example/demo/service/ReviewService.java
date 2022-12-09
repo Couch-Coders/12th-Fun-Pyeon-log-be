@@ -1,10 +1,7 @@
 package com.example.demo.service;
 
 import com.example.demo.dto.ReviewDTO;
-import com.example.demo.entity.Keyword;
-import com.example.demo.entity.KeywordContent;
-import com.example.demo.entity.Review;
-import com.example.demo.entity.User;
+import com.example.demo.entity.*;
 import com.example.demo.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
@@ -14,7 +11,9 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class ReviewService {
@@ -27,6 +26,11 @@ public class ReviewService {
     KeywordRepository keywordRepository;
     @Autowired
     KeywordContentRepository keywordContentRepository;
+    @Autowired
+    StoreSummaryRepository storeSummaryRepository;
+
+    @Autowired
+    StoreKeywordRepository storeKeywordRepository;
 
     @Transactional
     public void createReview(ReviewDTO reviewDTO, String storeId) {
