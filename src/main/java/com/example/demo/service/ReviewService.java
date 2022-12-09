@@ -95,7 +95,7 @@ public class ReviewService {
     }
 
     public List<ReviewDTO> getReviews(String storeId, Pageable pageable) {
-        List<Review> reviews = reviewRepository.findByStoreIdOrderByModifiedDateDesc(pageable, storeId);
+        List<Review> reviews = reviewRepository.findByStoreIdOrderByCreatedDateDesc(pageable, storeId);
         List<ReviewDTO> reviewDTOS = new ArrayList<>();
         for (Review r : reviews)
             reviewDTOS.add(new ReviewDTO(r));
