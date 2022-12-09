@@ -28,7 +28,7 @@ public class InterFirebaseTokenFilter extends FirebaseTokenFilter {
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
-        String email = "dkproh@gmail.com";
+        String email = "admin@gmail.com";
 
         try {
             UserDetails user = userDetailsService.loadUserByUsername(email);
