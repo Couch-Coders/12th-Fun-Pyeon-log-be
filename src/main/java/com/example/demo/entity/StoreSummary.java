@@ -32,6 +32,32 @@ public class StoreSummary {
         this.storeKeywords = storeKeywords;
     }
 
+    public StoreSummary(String storeId) {
+        this.storeId = storeId;
+        this.starRate = 0.0;
+        this.reviewCount = 0l;
+        this.storeKeywords = new ArrayList<>();
+    }
+
+    public StoreSummary() {
+    }
+
+    public void updateStoreKeyword(KeywordContent keywordContent) {
+        for (StoreKeyword sk : this.storeKeywords) {
+            if (sk.getKeywordContent().equals(keywordContent)) {
+                sk.increaseKeywordCount();
+                return;
+            }
+        }
+
+        this.storeKeywords.add(StoreKeyword.builder()
+                .keywordContent(keywordContent)
+                .storeSummary(this)
+                .keywordCount(0l)
+                .build()
+        );
+    }
+
     public List<String> getKeywordContents(int keywordsSizeLimit){
         List<String> keywords = new ArrayList<>();
         if (storeKeywords.size() >= keywordsSizeLimit)
@@ -45,6 +71,4 @@ public class StoreSummary {
         Collections.sort(storeKeywords, (o1, o2) -> (int) -(o1.getKeywordCount() - o2.getKeywordCount()));
     }
 
-    public StoreSummary() {
-    }
 }
