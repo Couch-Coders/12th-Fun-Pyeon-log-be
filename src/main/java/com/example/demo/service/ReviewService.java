@@ -46,6 +46,7 @@ public class ReviewService {
                 .build();
         reviewRepository.save(review);
 
+        reviewDTO.removeSameKeyword();
         for (String k : reviewDTO.getKeywords()) {
             KeywordContent keywordContent = keywordContentRepository.findByKeywordContent(k)
                     .orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST, "존재하지 않는 키워드입니다!"));
