@@ -6,7 +6,9 @@ import lombok.Data;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 
 @Data
@@ -41,5 +43,17 @@ public class ReviewDTO {
             this.keywords = new ArrayList<>();
         for (Keyword k : keywords)
             this.keywords.add(k.getKeywordContent().getKeywordContent());
+    }
+
+    public void removeSameKeyword() {
+        Map<String, Boolean> keywordMap = new HashMap<>();
+        List<String> newKeywords = new ArrayList<>();
+        for (String k : this.keywords) {
+            if (keywordMap.containsKey(k))
+                continue;
+            keywordMap.put(k, true);
+            newKeywords.add(k);
+        }
+        this.keywords = newKeywords;
     }
 }
