@@ -84,15 +84,11 @@ public class ReviewService {
                 .storeKeywords(summary.getStoreKeywords())
                 .build();
 
-        storeSummaryRepository.save(updateSummary);
-
-        List<StoreKeyword> storeKeywords = storeKeywordRepository.findByStoreSummary_StoreId(storeId);
-
         for (Keyword k : review.getKeywords()) {
             KeywordContent keywordContent = k.getKeywordContent();
             updateSummary.updateStoreKeyword(keywordContent);
         }
-        storeKeywordRepository.saveAll(updateSummary.getStoreKeywords());
+        storeSummaryRepository.save(updateSummary);
     }
 
     public List<ReviewDTO> getReviews(String storeId, Pageable pageable) {

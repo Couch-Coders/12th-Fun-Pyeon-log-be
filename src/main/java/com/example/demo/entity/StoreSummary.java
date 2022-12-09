@@ -21,7 +21,7 @@ public class StoreSummary {
     @Column
     Long reviewCount;
 
-    @OneToMany(mappedBy = "storeSummary")
+    @OneToMany(mappedBy = "storeSummary", cascade = CascadeType.ALL)
     List<StoreKeyword> storeKeywords;
 
     @Builder
