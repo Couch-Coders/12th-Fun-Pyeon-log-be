@@ -62,6 +62,38 @@ public class ReviewService {
         updateStoreSummary(review);
     }
 
+    @Transactional
+    public void updateStoreSummary(Review review) {
+        String storeId = review.getStoreId();
+        StoreSummary summary = storeSummaryRepository.findById(storeId)
+                .orElse(new StoreSummary(storeId));
+
+        List<Review> reviews = reviewRepository.findByStoreId(storeId);
+        Long reviewCount = Long.valueOf(reviews.size());
+
+        Double starAvr = reviews.stream()
+                .mapToDouble(Review::getStarCount)
+                .average()
+                .orElse(0);
+
+        StoreSummary updateSummary = StoreSummary.builder()
+                .storeId(storeId)
+                .starRate(starAvr)
+                .reviewCount(reviewCount)
+                .storeKeywords(summary.getStoreKeywords())
+                .build();
+
+        storeSummaryRepository.save(updateSummary);
+
+        List<StoreKeyword> storeKeywords = storeKeywordRepository.findByStoreSummary_StoreId(storeId);
+
+        for (Keyword k : review.getKeywords()) {
+            KeywordContent keywordContent = k.getKeywordContent();
+            updateSummary.updateStoreKeyword(keywordContent);
+        }
+        storeKeywordRepository.saveAll(updateSummary.getStoreKeywords());
+    }
+
     public List<ReviewDTO> getReviews(String storeId, Pageable pageable) {
         List<Review> reviews = reviewRepository.findByStoreIdOrderByModifiedDateDesc(pageable, storeId);
         List<ReviewDTO> reviewDTOS = new ArrayList<>();
