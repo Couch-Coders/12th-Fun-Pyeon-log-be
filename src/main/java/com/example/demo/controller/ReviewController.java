@@ -30,4 +30,12 @@ public class ReviewController {
         return ResponseEntity.ok().build();
     }
 
+    @PutMapping("/{reviewEntryNo}")
+    public ResponseEntity<String> modifyReview(@PathVariable String storeId,
+                                               @PathVariable Long reviewEntryNo,
+                                               @RequestBody ReviewDTO reviewDTO){
+        reviewService.modifyReview(storeId, reviewEntryNo, reviewDTO);
+        return ResponseEntity.ok().build();
+    }
+
 }
