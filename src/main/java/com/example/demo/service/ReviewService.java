@@ -136,4 +136,8 @@ public class ReviewService {
     }
 
     private void setAllKeywordContents() {
+        allKeywordContentMap = new HashMap<>();
+        for (KeywordContent kc : keywordContentRepository.findAll())
+            allKeywordContentMap.put(kc.getKeywordContent(), kc);
+    }
 }
