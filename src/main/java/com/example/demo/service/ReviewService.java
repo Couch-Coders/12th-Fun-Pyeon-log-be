@@ -32,6 +32,8 @@ public class ReviewService {
     @Autowired
     StoreKeywordRepository storeKeywordRepository;
 
+    private Map<String, KeywordContent> allKeywordContentMap;
+
     @Transactional
     public void createReview(ReviewDTO reviewDTO, String storeId) {
         User user = userRepository.findById(reviewDTO.getUserEntryNo())
