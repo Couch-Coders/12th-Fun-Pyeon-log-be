@@ -14,4 +14,6 @@ public interface StoreKeywordRepository extends JpaRepository<StoreKeyword, Long
     Optional<StoreKeyword> findByKeywordContentAndStoreSummary_StoreId(KeywordContent keywordContent, String storeId);
 
     List<StoreKeyword> findByStoreSummary_StoreId(String storeId);
+
+    void deleteByStoreSummary_StoreId(String storeId);
 }
