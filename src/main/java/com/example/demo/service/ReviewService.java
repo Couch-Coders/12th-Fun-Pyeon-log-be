@@ -98,4 +98,40 @@ public class ReviewService {
             reviewDTOS.add(new ReviewDTO(r));
         return reviewDTOS;
     }
+    @Transactional
+    public void modifyReview(String storeId, Long reviewEntryNo, ReviewDTO reviewDTO) {
+        User user = userRepository.findById(reviewDTO.getUserEntryNo())
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST, "존재하지 않는 유저입니다!"));
+
+        Review review = reviewRepository.findById(reviewEntryNo)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST, "존재하지 않는 리뷰입니다!"));
+
+        keywordRepository.deleteByStoreId(storeId);
+        review.modifyReview(Review.builder()
+                .reviewEntryNo(reviewEntryNo)
+                .reviewContent(reviewDTO.getReviewContent())
+                .starCount(reviewDTO.getStarCount())
+                .storeId(storeId)
+                .user(user)
+                .keywords(new ArrayList<>())
+                .build()
+        );
+
+        reviewDTO.removeSameKeyword();
+        if (!isUsableKeywordContents(reviewDTO.getKeywords()))
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "존재하지 않는 키워드입니다!");
+
+        for (String k : reviewDTO.getKeywords()) {
+            Keyword keyword = Keyword.builder()
+                    .review(review)
+                    .user(user)
+                    .storeId(storeId)
+                    .keywordContent(getKeywordContent(k))
+                    .build();
+            review.getKeywords().add(keyword);
+        }
+        reviewRepository.save(review);
+    }
+
+    private void setAllKeywordContents() {
 }
