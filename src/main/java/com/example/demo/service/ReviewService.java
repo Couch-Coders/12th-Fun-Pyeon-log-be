@@ -140,4 +140,12 @@ public class ReviewService {
         for (KeywordContent kc : keywordContentRepository.findAll())
             allKeywordContentMap.put(kc.getKeywordContent(), kc);
     }
+
+    public boolean isUsableKeywordContents(List<String> keywords) {
+        setAllKeywordContents();
+        for (String k : keywords)
+            if (!this.allKeywordContentMap.containsKey(k))
+                return false;
+        return true;
+    }
 }
