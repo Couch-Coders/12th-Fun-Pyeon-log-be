@@ -46,7 +46,6 @@ public class ReviewService {
                 .user(user)
                 .keywords(new ArrayList<>())
                 .build();
-        reviewRepository.save(review);
 
         reviewDTO.removeSameKeyword();
         for (String k : reviewDTO.getKeywords()) {
@@ -61,7 +60,7 @@ public class ReviewService {
                     .build();
             review.getKeywords().add(keyword);
         }
-        keywordRepository.saveAll(review.getKeywords());
+        reviewRepository.save(review);
         updateStoreSummary(review);
     }
 
@@ -141,7 +140,7 @@ public class ReviewService {
             allKeywordContentMap.put(kc.getKeywordContent(), kc);
     }
 
-    public boolean isUsableKeywordContents(List<String> keywords) {
+    private boolean isUsableKeywordContents(List<String> keywords) {
         setAllKeywordContents();
         for (String k : keywords)
             if (!this.allKeywordContentMap.containsKey(k))
@@ -149,7 +148,7 @@ public class ReviewService {
         return true;
     }
 
-    public KeywordContent getKeywordContent(String keywordContent){
+    private KeywordContent getKeywordContent(String keywordContent){
         return this.allKeywordContentMap.get(keywordContent);
     }
 }
