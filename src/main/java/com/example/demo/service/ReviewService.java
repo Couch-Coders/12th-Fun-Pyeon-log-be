@@ -148,4 +148,8 @@ public class ReviewService {
                 return false;
         return true;
     }
+
+    public KeywordContent getKeywordContent(String keywordContent){
+        return this.allKeywordContentMap.get(keywordContent);
+    }
 }
