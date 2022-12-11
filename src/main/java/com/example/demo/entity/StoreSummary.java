@@ -41,6 +41,13 @@ public class StoreSummary {
         return keywords;
     }
 
+    public List<String> getKeywordContents(){
+        List<String> keywords = new ArrayList<>();
+        for (int i=0 ; i<storeKeywords.size() ; i++)
+            keywords.add(storeKeywords.get(i).getKeywordContent().getKeywordContent());
+        return keywords;
+    }
+
     public void sortByKeywordCount(){
         Collections.sort(storeKeywords, (o1, o2) -> (int) -(o1.getKeywordCount() - o2.getKeywordCount()));
     }
