@@ -1,25 +1,29 @@
 package com.example.demo.service;
 
 import com.example.demo.dto.StoreSummaryDTO;
-import com.example.demo.entity.StoreSummary;
+import com.example.demo.entity.*;
+import com.example.demo.repository.KeywordContentRepository;
+import com.example.demo.repository.KeywordRepository;
 import com.example.demo.repository.ReviewRepository;
 import com.example.demo.repository.StoreSummaryRepository;
+import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 @Service
+@AllArgsConstructor
 public class StoreService {
 
-    @Autowired
     ReviewRepository reviewRepository;
-    @Autowired
     StoreSummaryRepository storeSummaryRepository;
+    KeywordRepository keywordRepository;
+    KeywordContentRepository keywordContentRepository;
     Map<String, KeywordContent> keywordContentMap;
 
     public List<StoreSummaryDTO> getStoreSummaries(String[] storeIds) {
