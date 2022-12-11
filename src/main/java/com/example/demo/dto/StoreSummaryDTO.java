@@ -25,7 +25,7 @@ public class StoreSummaryDTO {
         this.storeId = storeSummary.getStoreId();
         this.StarCount = storeSummary.getStarRate();
         this.reviewCount = storeSummary.getReviewCount();
-        this.keywordList = storeSummary.getKeywordContents(3);
+        this.keywordList = storeSummary.getKeywordContents();
     }
 
     public void setKeywordList(List<String> keywordList, int keywordsSizeLimit) {
