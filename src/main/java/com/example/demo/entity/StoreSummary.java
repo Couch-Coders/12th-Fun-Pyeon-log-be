@@ -42,22 +42,6 @@ public class StoreSummary {
     public StoreSummary() {
     }
 
-    public void updateStoreKeyword(KeywordContent keywordContent) {
-        for (StoreKeyword sk : this.storeKeywords) {
-            if (sk.getKeywordContent().equals(keywordContent)) {
-                sk.increaseKeywordCount();
-                return;
-            }
-        }
-
-        this.storeKeywords.add(StoreKeyword.builder()
-                .keywordContent(keywordContent)
-                .storeSummary(this)
-                .keywordCount(0l)
-                .build()
-        );
-    }
-
     public List<String> getKeywordContents(int keywordsSizeLimit){
         List<String> keywords = new ArrayList<>();
         if (storeKeywords.size() >= keywordsSizeLimit)

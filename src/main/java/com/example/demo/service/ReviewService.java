@@ -61,35 +61,6 @@ public class ReviewService {
             review.getKeywords().add(keyword);
         }
         reviewRepository.save(review);
-        updateStoreSummary(review);
-    }
-
-    @Transactional
-    public void updateStoreSummary(Review review) {
-        String storeId = review.getStoreId();
-        StoreSummary summary = storeSummaryRepository.findById(storeId)
-                .orElse(new StoreSummary(storeId));
-
-        List<Review> reviews = reviewRepository.findByStoreId(storeId);
-        Long reviewCount = Long.valueOf(reviews.size());
-
-        Double starAvr = reviews.stream()
-                .mapToDouble(Review::getStarCount)
-                .average()
-                .orElse(0);
-
-        StoreSummary updateSummary = StoreSummary.builder()
-                .storeId(storeId)
-                .starRate(starAvr)
-                .reviewCount(reviewCount)
-                .storeKeywords(summary.getStoreKeywords())
-                .build();
-
-        for (Keyword k : review.getKeywords()) {
-            KeywordContent keywordContent = k.getKeywordContent();
-            updateSummary.updateStoreKeyword(keywordContent);
-        }
-        storeSummaryRepository.save(updateSummary);
     }
 
     public List<ReviewDTO> getReviews(String storeId, Pageable pageable) {
@@ -106,6 +77,9 @@ public class ReviewService {
 
         Review review = reviewRepository.findById(reviewEntryNo)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST, "존재하지 않는 리뷰입니다!"));
+
+        Review oldReview = new Review();
+        oldReview.modifyReview(review);
 
         keywordRepository.deleteByStoreId(storeId);
         review.modifyReview(Review.builder()
