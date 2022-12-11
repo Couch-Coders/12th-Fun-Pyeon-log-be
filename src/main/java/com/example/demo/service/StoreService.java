@@ -95,4 +95,9 @@ public class StoreService {
         for (KeywordContent kc : keywordContents)
             keywordContentMap.put(kc.getKeywordContent(), kc);
     }
+
+    private KeywordContent getKeywordContent(String content) {
+        initKeywordContentMap();
+        return keywordContentMap.get(content);
+    }
 }
