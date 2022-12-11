@@ -20,6 +20,7 @@ public class StoreService {
     ReviewRepository reviewRepository;
     @Autowired
     StoreSummaryRepository storeSummaryRepository;
+    Map<String, KeywordContent> keywordContentMap;
 
     public List<StoreSummaryDTO> getStoreSummaries(String[] storeIds) {
         List<StoreSummary> storeSummaries = storeSummaryRepository.findAllByStoreIdIn(storeIds);
@@ -82,5 +83,16 @@ public class StoreService {
                     .build()
             );
         }
+    }
+    private void initKeywordContentMap(){
+        if (keywordContentMap == null)
+            keywordContentMap = new HashMap<>();
+
+        if (keywordContentMap.size() != 0)
+            return;
+
+        List<KeywordContent> keywordContents = keywordContentRepository.findAll();
+        for (KeywordContent kc : keywordContents)
+            keywordContentMap.put(kc.getKeywordContent(), kc);
     }
 }
