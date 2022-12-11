@@ -125,4 +125,8 @@ public class ReviewService {
     private KeywordContent getKeywordContent(String keywordContent){
         return this.allKeywordContentMap.get(keywordContent);
     }
+
+    public void deleteReview(String storeId, Long reviewEntryNo) {
+        reviewRepository.deleteById(reviewEntryNo);
+    }
 }
