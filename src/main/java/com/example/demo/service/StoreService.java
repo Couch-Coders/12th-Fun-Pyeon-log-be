@@ -61,4 +61,26 @@ public class StoreService {
         updateStoreKeywords(updateSummary);
         return storeSummaryRepository.save(updateSummary);
     }
+
+    public void updateStoreKeywords(StoreSummary summary) {
+        String storeId = summary.getStoreId();
+        List<Keyword> keywords = keywordRepository.findByStoreId(storeId);
+        Map<String, Long> keywordMap = new HashMap<>();
+        for (Keyword k : keywords) {
+            String keywordContent = k.getKeywordContent().getKeywordContent();
+            if (!keywordMap.containsKey(keywordContent))
+                keywordMap.put(keywordContent, 0l);
+            keywordMap.put(keywordContent, keywordMap.get(keywordContent)+1);
+        }
+
+        for (String k : keywordMap.keySet()) {
+            summary.getStoreKeywords().add(
+                    StoreKeyword.builder()
+                    .storeSummary(summary)
+                    .keywordContent(getKeywordContent(k))
+                    .keywordCount(keywordMap.get(k))
+                    .build()
+            );
+        }
+    }
 }
