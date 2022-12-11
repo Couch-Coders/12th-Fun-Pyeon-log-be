@@ -39,4 +39,26 @@ public class StoreService {
         storeSummary.sortByKeywordCount();
         return new StoreSummaryDTO(storeSummary);
     }
+
+    public StoreSummary updateStoreSummary(String storeId) {
+        List<Review> reviews = reviewRepository.findAllByStoreId(storeId);
+        Long reviewCount = Long.valueOf(reviews.size());
+
+        Double starRate = reviews.stream()
+                .mapToDouble(Review::getStarCount)
+                .average()
+                .orElse(0.0);
+
+        List<StoreKeyword> updateStoreKeyword = new ArrayList<>();
+
+        StoreSummary updateSummary = StoreSummary.builder()
+                .storeId(storeId)
+                .reviewCount(reviewCount)
+                .starRate(starRate)
+                .storeKeywords(updateStoreKeyword)
+                .build();
+
+        updateStoreKeywords(updateSummary);
+        return storeSummaryRepository.save(updateSummary);
+    }
 }
