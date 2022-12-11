@@ -40,7 +40,9 @@ public class StoreService {
 
     public StoreSummaryDTO getStoreSummary(String storeId) {
         StoreSummary storeSummary = storeSummaryRepository.findById(storeId)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "존재하지 않는 편의점입니다."));
+                .orElse(null);
+        if (storeSummary == null)
+            return null;
         storeSummary.sortByKeywordCount();
         return new StoreSummaryDTO(storeSummary);
     }
