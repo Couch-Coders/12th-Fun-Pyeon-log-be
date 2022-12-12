@@ -196,4 +196,27 @@ public class StoreService {
             storeKeywordMap.get(content).increaseKeywordCount();
         }
     }
+
+    private void decreaseStoreKeywordCounts(StoreSummary summary, List<Keyword> keywords){
+        List<StoreKeyword> storeKeywords = summary.getStoreKeywords();
+
+        Map<String, StoreKeyword> storeKeywordMap = new HashMap<>();
+        for (StoreKeyword sk : storeKeywords)
+            storeKeywordMap.put(sk.getKeywordContent().getKeywordContent(), sk);
+
+        for (Keyword k : keywords) {
+            String content = k.getKeywordContent().getKeywordContent();
+            if (!storeKeywordMap.containsKey(content))
+                continue;
+            storeKeywordMap.get(content).decreaseKeywordCount();
+        }
+
+        storeKeywords.removeAll(storeKeywords);
+        for (StoreKeyword sk : storeKeywordMap.values()) {
+            if (sk.getKeywordCount() > 0)
+                storeKeywords.add(sk);
+            else
+                storeKeywordRepository.deleteById(sk.getStoreKeywordNo());
+        }
+    }
 }
