@@ -51,10 +51,12 @@ public class SecureConfig {
     @Bean
     public WebSecurityCustomizer webSecurityCustomizer() {
         return web -> web.ignoring()
-                .antMatchers("/users/me")
-                .antMatchers("/users")
+                .antMatchers(HttpMethod.GET, "/users/me")
                 .antMatchers("/favicon.ico")
-                .antMatchers("/hello");
+                .antMatchers("/hello")
+                .antMatchers(HttpMethod.GET, "/stores/*/reviews")
+                .antMatchers(HttpMethod.GET, "/stores")
+                .antMatchers(HttpMethod.GET, "/stores/*");
 
     }
 
