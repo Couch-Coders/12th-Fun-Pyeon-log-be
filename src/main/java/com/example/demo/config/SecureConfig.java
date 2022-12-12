@@ -1,6 +1,7 @@
 package com.example.demo.config;
 
 import com.example.demo.filter.FirebaseTokenFilter;
+import com.example.demo.filter.FirebaseTokenFilterFactory;
 import com.example.demo.filter.InterFirebaseTokenFilter;
 import com.example.demo.filter.ProdFirebaseTokenFilter;
 import com.google.firebase.auth.FirebaseAuth;
@@ -24,11 +25,13 @@ public class SecureConfig {
 
     private FirebaseAuth firebaseAuth;
 
+    private FirebaseTokenFilterFactory firebaseTokenFilterFactory;
+
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         setSecurityConfigs(http);
 
-        http.addFilterBefore(new ProdFirebaseTokenFilter(userDetailsService, firebaseAuth),
+        http.addFilterBefore(firebaseTokenFilterFactory.getInstance(userDetailsService, firebaseAuth),
                 UsernamePasswordAuthenticationFilter.class);
         return http.build();
     }
