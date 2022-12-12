@@ -76,7 +76,7 @@ public class ReviewService {
         Review oldReview = new Review();
         oldReview.modifyReview(review);
 
-        keywordRepository.deleteByStoreId(storeId);
+        keywordRepository.deleteByReview_ReviewEntryNo(review.getReviewEntryNo());
         review.modifyReview(Review.builder()
                 .reviewEntryNo(reviewEntryNo)
                 .reviewContent(reviewDTO.getReviewContent())
