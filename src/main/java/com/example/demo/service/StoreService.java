@@ -2,10 +2,7 @@ package com.example.demo.service;
 
 import com.example.demo.dto.StoreSummaryDTO;
 import com.example.demo.entity.*;
-import com.example.demo.repository.KeywordContentRepository;
-import com.example.demo.repository.KeywordRepository;
-import com.example.demo.repository.ReviewRepository;
-import com.example.demo.repository.StoreSummaryRepository;
+import com.example.demo.repository.*;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -24,6 +21,7 @@ public class StoreService {
     StoreSummaryRepository storeSummaryRepository;
     KeywordRepository keywordRepository;
     KeywordContentRepository keywordContentRepository;
+    StoreKeywordRepository storeKeywordRepository;
     Map<String, KeywordContent> keywordContentMap;
 
     public List<StoreSummaryDTO> getStoreSummaries(String[] storeIds) {
@@ -48,7 +46,7 @@ public class StoreService {
     }
 
     public StoreSummary updateStoreSummary(String storeId) {
-        List<Review> reviews = reviewRepository.findAllByStoreId(storeId);
+        List<Review> reviews = reviewRepository.findByStoreId(storeId);
         Long reviewCount = Long.valueOf(reviews.size());
 
         Double starRate = reviews.stream()
@@ -64,6 +62,7 @@ public class StoreService {
                 .starRate(starRate)
                 .storeKeywords(updateStoreKeyword)
                 .build();
+        storeKeywordRepository.deleteByStoreSummary_StoreId(storeId);
 
         updateStoreKeywords(updateSummary);
         return storeSummaryRepository.save(updateSummary);
