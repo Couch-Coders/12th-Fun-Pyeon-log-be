@@ -40,7 +40,7 @@ public class StoreService {
         StoreSummary storeSummary = storeSummaryRepository.findById(storeId)
                 .orElse(null);
         if (storeSummary == null)
-            return null;
+            return new StoreSummaryDTO(new StoreSummary(storeId));
         storeSummary.sortByKeywordCount();
         return new StoreSummaryDTO(storeSummary, 5);
     }
