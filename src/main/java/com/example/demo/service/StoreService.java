@@ -127,4 +127,29 @@ public class StoreService {
 
         storeSummaryRepository.save(updatedSummary);
     }
+
+    public void modifyReviewInSummary(Review newReview, Review oldReview){
+        String storeId = newReview.getStoreId();
+        StoreSummary summary = storeSummaryRepository.findById(storeId)
+                .orElse(new StoreSummary(storeId));
+
+        Long reviewCount = reviewRepository.countByStoreId(storeId).get();
+
+        double gap = newReview.getStarCount() - oldReview.getStarCount();
+        double starRate = reviewCount != 0 ?
+                (summary.getStarRate() * (reviewCount) + gap) / (reviewCount) : 0;
+
+        starRate = Math.round(starRate * 10) / 10;
+
+        decreaseStoreKeywordCounts(summary, oldReview.getKeywords());
+        increaseStoreKeywordCounts(summary, newReview.getKeywords());
+        StoreSummary updatedSummary = StoreSummary.builder()
+                .storeId(storeId)
+                .starRate(starRate)
+                .reviewCount(reviewCount)
+                .storeKeywords(summary.getStoreKeywords())
+                .build();
+
+        storeSummaryRepository.save(updatedSummary);
+    }
 }
