@@ -21,7 +21,7 @@ public class StoreSummary {
     @Column
     Long reviewCount;
 
-    @OneToMany(mappedBy = "storeSummary")
+    @OneToMany(mappedBy = "storeSummary", cascade = CascadeType.ALL)
     List<StoreKeyword> storeKeywords;
 
     @Builder
@@ -30,6 +30,16 @@ public class StoreSummary {
         this.starRate = starRate;
         this.reviewCount = reviewCount;
         this.storeKeywords = storeKeywords;
+    }
+
+    public StoreSummary(String storeId) {
+        this.storeId = storeId;
+        this.starRate = 0.0;
+        this.reviewCount = 0l;
+        this.storeKeywords = new ArrayList<>();
+    }
+
+    public StoreSummary() {
     }
 
     public List<String> getKeywordContents(int keywordsSizeLimit){
@@ -52,6 +62,4 @@ public class StoreSummary {
         Collections.sort(storeKeywords, (o1, o2) -> (int) -(o1.getKeywordCount() - o2.getKeywordCount()));
     }
 
-    public StoreSummary() {
-    }
 }

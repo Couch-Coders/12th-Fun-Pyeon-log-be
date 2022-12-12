@@ -28,6 +28,13 @@ public class StoreSummaryDTO {
         this.keywordList = storeSummary.getKeywordContents();
     }
 
+    public StoreSummaryDTO(StoreSummary storeSummary, int keywordsSizeLimit) {
+        this.storeId = storeSummary.getStoreId();
+        this.StarCount = storeSummary.getStarRate();
+        this.reviewCount = storeSummary.getReviewCount();
+        this.keywordList = storeSummary.getKeywordContents(keywordsSizeLimit);
+    }
+
     public void setKeywordList(List<String> keywordList, int keywordsSizeLimit) {
         int keywordsSize = keywordList.size();
         int cutCount = keywordsSizeLimit > keywordsSize ? keywordsSize : keywordsSizeLimit;

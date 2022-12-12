@@ -44,7 +44,7 @@ public class StoreService {
         if (storeSummary == null)
             return null;
         storeSummary.sortByKeywordCount();
-        return new StoreSummaryDTO(storeSummary);
+        return new StoreSummaryDTO(storeSummary, 5);
     }
 
     public StoreSummary updateStoreSummary(String storeId) {
