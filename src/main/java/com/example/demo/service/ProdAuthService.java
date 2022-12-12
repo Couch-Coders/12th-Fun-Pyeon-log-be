@@ -6,17 +6,24 @@ import com.google.firebase.auth.FirebaseAuthException;
 import com.google.firebase.auth.FirebaseToken;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Profile;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 @Slf4j
 @Service
 @Profile("prod")
 public class ProdAuthService extends AbstractAuthService {
     @Override
-    public FirebaseTokenDTO verifyIdToken(String bearerToken) throws FirebaseAuthException {
-        FirebaseToken token = firebaseAuth.verifyIdToken(bearerToken);
-        FirebaseTokenDTO tokenDTO = new FirebaseTokenDTO(token);
-        return tokenDTO;
+    public FirebaseTokenDTO verifyIdToken(String bearerToken) {
+        try {
+            FirebaseToken token = firebaseAuth.verifyIdToken(bearerToken);
+            FirebaseTokenDTO tokenDTO = new FirebaseTokenDTO(token);
+            return tokenDTO;
+        } catch (Exception e) {
+            log.error("access token is not usable : {}", e.getMessage());
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "토큰 값이 유효하지 않습니다!");
+        }
     }
 
     @Override
