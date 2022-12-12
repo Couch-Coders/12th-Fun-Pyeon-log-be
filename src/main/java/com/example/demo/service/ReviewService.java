@@ -55,7 +55,7 @@ public class ReviewService {
             review.getKeywords().add(keyword);
         }
         reviewRepository.save(review);
-        storeService.updateStoreSummary(storeId);
+        storeService.addReviewInSummary(review);
     }
 
     public List<ReviewDTO> getReviews(String storeId, Pageable pageable) {
@@ -100,8 +100,9 @@ public class ReviewService {
                     .build();
             review.getKeywords().add(keyword);
         }
+
         reviewRepository.save(review);
-        storeService.updateStoreSummary(storeId);
+        storeService.modifyReviewInSummary(review, oldReview);
     }
 
     private void setAllKeywordContents() {
@@ -122,8 +123,13 @@ public class ReviewService {
         return this.allKeywordContentMap.get(keywordContent);
     }
 
+    @Transactional
     public void deleteReview(String storeId, Long reviewEntryNo) {
+        Review review = reviewRepository.findById(reviewEntryNo).orElse(null);
+        if (review == null)
+            return;
+
         reviewRepository.deleteById(reviewEntryNo);
-        storeService.updateStoreSummary(storeId);
+        storeService.deleteReviewInSummary(review);
     }
 }
