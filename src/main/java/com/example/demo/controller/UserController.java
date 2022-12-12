@@ -14,6 +14,8 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
+import java.util.HashMap;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/users")
@@ -26,11 +28,15 @@ public class UserController {
     AbstractAuthService authService;
 
     @GetMapping("/me")
-    public ResponseEntity<String> login(@RequestHeader("Authorization") String token) throws FirebaseAuthException {
+    public ResponseEntity<Map<String, String>> login(@RequestHeader("Authorization") String token) throws FirebaseAuthException {
         FirebaseTokenDTO tokenDTO = authService.verifyIdToken(token);
         User user = authService.loginOrEntry(tokenDTO);
         ResponseCookie responseCookie = createCookie("token", token);
-        return ResponseEntity.ok().header(HttpHeaders.SET_COOKIE, responseCookie.toString()).body(user.getEmail());
+
+        Map<String, String> respMap = new HashMap<>();
+        respMap.put("email", tokenDTO.getEmail());
+        respMap.put("userImageUrl", tokenDTO.getPictureUrl());
+        return ResponseEntity.ok().header(HttpHeaders.SET_COOKIE, responseCookie.toString()).body(respMap);
     }
 
     @DeleteMapping("/me")
