@@ -5,11 +5,15 @@ import com.example.demo.entity.User;
 import com.example.demo.service.AbstractAuthService;
 import com.example.demo.service.UserService;
 import com.google.firebase.auth.FirebaseAuthException;
+import com.google.firebase.auth.FirebaseToken;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletRequest;
 
 @RestController
 @RequestMapping("/users")
@@ -62,6 +66,12 @@ public class UserController {
                 .build();
     }
 
-
-
+    public String findCookie(HttpServletRequest request, String name) {
+        Cookie[] cookies = request.getCookies();
+        for (Cookie c : cookies) {
+            if (c.getName().equals(name))
+                return c.getName();
+        }
+        return null;
+    }
 }
