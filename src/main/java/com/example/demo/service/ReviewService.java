@@ -62,6 +62,7 @@ public class ReviewService {
             review.getKeywords().add(keyword);
         }
         reviewRepository.save(review);
+        storeService.updateStoreSummary(storeId);
     }
 
     public List<ReviewDTO> getReviews(String storeId, Pageable pageable) {
@@ -107,6 +108,7 @@ public class ReviewService {
             review.getKeywords().add(keyword);
         }
         reviewRepository.save(review);
+        storeService.updateStoreSummary(storeId);
     }
 
     private void setAllKeywordContents() {
@@ -129,5 +131,6 @@ public class ReviewService {
 
     public void deleteReview(String storeId, Long reviewEntryNo) {
         reviewRepository.deleteById(reviewEntryNo);
+        storeService.updateStoreSummary(storeId);
     }
 }
