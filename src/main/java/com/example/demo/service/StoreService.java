@@ -175,4 +175,25 @@ public class StoreService {
 
         storeSummaryRepository.save(updatedSummary);
     }
+
+    private void increaseStoreKeywordCounts(StoreSummary summary, List<Keyword> keywords) {
+        List<StoreKeyword> storeKeywords = summary.getStoreKeywords();
+
+        Map<String, StoreKeyword> storeKeywordMap = new HashMap<>();
+        for (StoreKeyword sk : storeKeywords)
+            storeKeywordMap.put(sk.getKeywordContent().getKeywordContent(), sk);
+
+        for (Keyword k : keywords) {
+            String content = k.getKeywordContent().getKeywordContent();
+            if (!storeKeywordMap.containsKey(content)) {
+                storeKeywordMap.put(content, StoreKeyword.builder()
+                        .keywordCount(1l)
+                        .keywordContent(k.getKeywordContent())
+                        .storeSummary(summary).build());
+                storeKeywords.add(storeKeywordMap.get(content));
+                continue;
+            }
+            storeKeywordMap.get(content).increaseKeywordCount();
+        }
+    }
 }
