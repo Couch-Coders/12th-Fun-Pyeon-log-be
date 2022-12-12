@@ -31,6 +31,7 @@ public class ReviewService {
 
     @Autowired
     StoreKeywordRepository storeKeywordRepository;
+    StoreService storeService;
 
     private Map<String, KeywordContent> allKeywordContentMap;
 
