@@ -34,6 +34,9 @@ public class StoreSummary {
 
     public StoreSummary(String storeId) {
         this.storeId = storeId;
+        this.starRate = 0.0;
+        this.reviewCount = 0l;
+        this.storeKeywords = new ArrayList<>();
     }
 
     public StoreSummary() {
