@@ -9,7 +9,6 @@ import java.util.List;
 
 @Repository
 public interface ReviewRepository extends JpaRepository<Review, Long> {
-    List<Review> findByStoreId(String storeId);
+    List<Review> findByStoreId(Pageable pageable, String storeId);
 
-    List<Review> findByStoreIdOrderByCreatedDateDesc(Pageable pageable, String storeId);
 }
