@@ -4,13 +4,10 @@ import com.example.demo.dto.StoreSummaryDTO;
 import com.example.demo.entity.*;
 import com.example.demo.repository.*;
 import lombok.AllArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
-import org.springframework.web.server.ResponseStatusException;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.*;
-import java.util.function.Function;
 import java.util.stream.Collectors;
 
 @Service
@@ -104,5 +101,30 @@ public class StoreService {
     private KeywordContent getKeywordContent(String content) {
         initKeywordContentMap();
         return keywordContentMap.get(content);
+    }
+
+    @Transactional
+    public void addReviewInSummary(Review review){
+        String storeId = review.getStoreId();
+        StoreSummary summary = storeSummaryRepository.findById(storeId)
+                .orElse(new StoreSummary(storeId));
+
+        Long reviewCount = reviewRepository.countByStoreId(storeId).get();
+
+        double starRate = reviewCount != 0 ?
+                (summary.getStarRate() * (reviewCount-1) + review.getStarCount()) / (reviewCount) : 0;
+
+        starRate = Math.round(starRate * 10);
+        starRate /= 10;
+
+        increaseStoreKeywordCounts(summary, review.getKeywords());
+        StoreSummary updatedSummary = StoreSummary.builder()
+                .storeId(storeId)
+                .starRate(starRate)
+                .reviewCount(reviewCount)
+                .storeKeywords(summary.getStoreKeywords())
+                .build();
+
+        storeSummaryRepository.save(updatedSummary);
     }
 }
