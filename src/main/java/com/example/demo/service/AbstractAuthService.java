@@ -18,7 +18,7 @@ public abstract class AbstractAuthService {
     @Autowired
     UserService userService;
 
-    public abstract FirebaseTokenDTO verifyIdToken(String bearerToken) throws FirebaseAuthException;
+    public abstract FirebaseTokenDTO verifyIdToken(String bearerToken);
 
     public abstract void revokeRefreshTokens(String uid) throws FirebaseAuthException;
 
