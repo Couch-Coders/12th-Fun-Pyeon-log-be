@@ -8,6 +8,7 @@ import java.util.List;
 
 @Repository
 public interface KeywordRepository extends JpaRepository<Keyword, Long> {
+    void deleteByReview_ReviewEntryNo(Long reviewEntryNo);
 
     List<Keyword> findByStoreId(String storeId);
 }
