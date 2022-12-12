@@ -34,7 +34,8 @@ public class UserController {
     }
 
     @DeleteMapping("/me")
-    public ResponseEntity<String> logout(@RequestHeader("Authorization") String token) throws FirebaseAuthException {
+    public ResponseEntity<String> logout(HttpServletRequest request) throws FirebaseAuthException {
+        String token = findCookie(request, "token");
         FirebaseTokenDTO tokenDTO = authService.verifyIdToken(token);
         authService.revokeRefreshTokens(tokenDTO.getUid());
         return ResponseEntity.ok().header(HttpHeaders.SET_COOKIE, removeCookie("token").toString()).build();
