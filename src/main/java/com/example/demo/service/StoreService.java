@@ -37,6 +37,6 @@ public class StoreService {
         StoreSummary storeSummary = storeSummaryRepository.findById(storeId)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "존재하지 않는 편의점입니다."));
         storeSummary.sortByKeywordCount();
-        return new StoreSummaryDTO(storeSummary);
+        return new StoreSummaryDTO(storeSummary, 5);
     }
 }

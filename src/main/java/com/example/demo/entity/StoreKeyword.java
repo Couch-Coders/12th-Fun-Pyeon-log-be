@@ -30,6 +30,10 @@ public class StoreKeyword {
         this.keywordCount = keywordCount;
     }
 
+    public void increaseKeywordCount() {
+        this.keywordCount++;
+    }
+
     public StoreKeyword() {
     }
 }
