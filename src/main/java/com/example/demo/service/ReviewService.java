@@ -3,6 +3,7 @@ package com.example.demo.service;
 import com.example.demo.dto.ReviewDTO;
 import com.example.demo.entity.*;
 import com.example.demo.repository.*;
+import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
@@ -16,21 +17,13 @@ import java.util.List;
 import java.util.Map;
 
 @Service
+@AllArgsConstructor
 public class ReviewService {
 
-    @Autowired
     ReviewRepository reviewRepository;
-    @Autowired
     UserRepository userRepository;
-    @Autowired
     KeywordRepository keywordRepository;
-    @Autowired
     KeywordContentRepository keywordContentRepository;
-    @Autowired
-    StoreSummaryRepository storeSummaryRepository;
-
-    @Autowired
-    StoreKeywordRepository storeKeywordRepository;
     StoreService storeService;
 
     private Map<String, KeywordContent> allKeywordContentMap;
