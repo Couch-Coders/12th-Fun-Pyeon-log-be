@@ -66,7 +66,7 @@ public class ReviewService {
     }
     @Transactional
     public void modifyReview(String storeId, Long reviewEntryNo, ReviewDTO reviewDTO) {
-        User user = userRepository.findByEmail(reviewDTO.getUserEmail())
+        User user = userRepository.findById(reviewDTO.getReviewEntryNo())
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST, "존재하지 않는 유저입니다!"));
 
         Review review = reviewRepository.findById(reviewEntryNo)
