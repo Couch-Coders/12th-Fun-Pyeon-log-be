@@ -46,23 +46,10 @@ public class StoreService {
         StoreSummary summary = storeSummaryRepository.findById(storeId)
                 .orElse(new StoreSummary(storeId));
 
-        Long reviewCount = reviewRepository.countByStoreId(storeId).get();
+        summary.addStarCount(review.getStarCount());
 
-        double starRate = reviewCount != 0 ?
-                (summary.getStarRate() * (reviewCount-1) + review.getStarCount()) / (reviewCount) : 0;
-
-        starRate = Math.round(starRate * 10);
-        starRate /= 10;
-
-        increaseStoreKeywordCounts(summary, review.getKeywords());
-        StoreSummary updatedSummary = StoreSummary.builder()
-                .storeId(storeId)
-                .starRate(starRate)
-                .reviewCount(reviewCount)
-                .storeKeywords(summary.getStoreKeywords())
-                .build();
-
-        storeSummaryRepository.save(updatedSummary);
+        summary.increaseStoreKeywordCounts(review.getKeywords());
+        storeSummaryRepository.save(summary);
     }
 
     public void modifyReviewInSummary(Review newReview, Review oldReview){
