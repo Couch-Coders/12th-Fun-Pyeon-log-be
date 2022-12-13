@@ -99,4 +99,18 @@ public class StoreSummary {
             storeKeywordMap.get(content).increaseKeywordCount();
         }
     }
+    public void decreaseStoreKeywordCounts(List<Keyword> keywords){
+        List<StoreKeyword> storeKeywords = getStoreKeywords();
+
+        Map<String, StoreKeyword> storeKeywordMap = new HashMap<>();
+        for (StoreKeyword sk : storeKeywords)
+            storeKeywordMap.put(sk.getKeywordContent().getKeywordContent(), sk);
+
+        for (Keyword k : keywords) {
+            String content = k.getKeywordContent().getKeywordContent();
+            if (!storeKeywordMap.containsKey(content))
+                continue;
+            storeKeywordMap.get(content).decreaseKeywordCount();
+        }
+    }
 }
