@@ -1,12 +1,12 @@
 package com.example.demo.controller;
 
 import com.example.demo.dto.ReviewDTO;
-import com.example.demo.entity.Review;
+import com.example.demo.entity.User;
 import com.example.demo.service.ReviewService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -25,8 +25,9 @@ public class ReviewController {
 
     @PostMapping("")
     public ResponseEntity<String> addReview(@RequestBody ReviewDTO reviewDTO,
-                                    @PathVariable String storeId){
-        reviewService.createReview(reviewDTO, storeId);
+                                            @PathVariable String storeId,
+                                            @AuthenticationPrincipal User user){
+        reviewService.createReview(reviewDTO, storeId, user.getEmail());
         return ResponseEntity.ok().build();
     }
 
@@ -44,5 +45,4 @@ public class ReviewController {
         reviewService.deleteReview(storeId, reviewEntryNo);
         return ResponseEntity.ok().build();
     }
-
 }
