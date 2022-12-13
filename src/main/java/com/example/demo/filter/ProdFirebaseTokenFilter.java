@@ -1,5 +1,6 @@
 package com.example.demo.filter;
 
+import com.example.demo.consts.AuthConsts;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseAuthException;
 import com.google.firebase.auth.FirebaseToken;
@@ -27,7 +28,7 @@ public class ProdFirebaseTokenFilter extends FirebaseTokenFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         Cookie[] cookies = request.getCookies();
-        String token = findCookie(cookies, "token");
+        String token = findCookie(cookies, AuthConsts.accessTokenKey);
 
         try {
             String email = firebaseAuth.verifyIdToken(token).getEmail();

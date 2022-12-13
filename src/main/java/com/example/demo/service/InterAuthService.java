@@ -11,8 +11,8 @@ import org.springframework.stereotype.Service;
 @Profile("inter")
 public class InterAuthService extends AbstractAuthService {
     @Override
-    public FirebaseTokenDTO verifyIdToken(String bearerToken) throws FirebaseAuthException {
-        return new FirebaseTokenDTO("uid-1", "name-1", "admin@gmail.com");
+    public FirebaseTokenDTO verifyIdToken(String bearerToken) {
+        return new FirebaseTokenDTO("uid-1", "name-1", "admin@gmail.com", "picture-sample");
     }
 
     @Override
