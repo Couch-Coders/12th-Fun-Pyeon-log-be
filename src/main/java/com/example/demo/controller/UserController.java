@@ -29,7 +29,7 @@ public class UserController {
     AbstractAuthService authService;
 
     @GetMapping("/me")
-    public ResponseEntity<Map<String, String>> login(@RequestHeader("Authorization") String token) throws FirebaseAuthException {
+    public ResponseEntity<Map<String, String>> login(@RequestHeader("Authorization") String token) {
         FirebaseTokenDTO tokenDTO = authService.verifyIdToken(token);
         User user = authService.loginOrEntry(tokenDTO);
         ResponseCookie responseCookie = createCookie(AuthConsts.accessTokenKey, token);
@@ -54,7 +54,7 @@ public class UserController {
     }
 
     @DeleteMapping("")
-    public ResponseEntity<String> deleteUser(HttpServletRequest request) throws FirebaseAuthException {
+    public ResponseEntity<String> deleteUser(HttpServletRequest request) {
         String token = findCookie(request, AuthConsts.accessTokenKey);
         FirebaseTokenDTO tokenDTO = authService.verifyIdToken(token);
 
