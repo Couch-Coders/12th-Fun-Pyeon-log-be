@@ -4,9 +4,7 @@ import lombok.Builder;
 import lombok.Getter;
 
 import javax.persistence.*;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 
 @Entity
 @Getter
@@ -62,4 +60,10 @@ public class StoreSummary {
         Collections.sort(storeKeywords, (o1, o2) -> (int) -(o1.getKeywordCount() - o2.getKeywordCount()));
     }
 
+    public void addStarCount(double starCount){
+        double starRate = reviewCount != 0 ?
+                (getStarRate() * (reviewCount) + starCount) / (reviewCount+1) : starCount;
+        this.starRate = (double) Math.round(starRate * 10) / 10;
+        this.reviewCount++;
+    }
 }
