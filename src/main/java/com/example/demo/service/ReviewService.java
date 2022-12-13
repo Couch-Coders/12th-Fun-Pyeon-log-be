@@ -84,8 +84,7 @@ public class ReviewService {
                 .storeId(storeId)
                 .user(user)
                 .keywords(new ArrayList<>())
-                .build()
-        );
+                .build());
 
         reviewDTO.removeSameKeyword();
         if (!isUsableKeywordContents(reviewDTO.getKeywords()))
@@ -105,6 +104,16 @@ public class ReviewService {
         storeService.modifyReviewInSummary(review, oldReview);
     }
 
+    @Transactional
+    public void deleteReview(String storeId, Long reviewEntryNo) {
+        Review review = reviewRepository.findById(reviewEntryNo).orElse(null);
+        if (review == null)
+            return;
+
+        reviewRepository.deleteById(reviewEntryNo);
+        storeService.deleteReviewInSummary(review);
+    }
+
     private void setAllKeywordContents() {
         allKeywordContentMap = new HashMap<>();
         for (KeywordContent kc : keywordContentRepository.findAll())
@@ -121,15 +130,5 @@ public class ReviewService {
 
     private KeywordContent getKeywordContent(String keywordContent){
         return this.allKeywordContentMap.get(keywordContent);
-    }
-
-    @Transactional
-    public void deleteReview(String storeId, Long reviewEntryNo) {
-        Review review = reviewRepository.findById(reviewEntryNo).orElse(null);
-        if (review == null)
-            return;
-
-        reviewRepository.deleteById(reviewEntryNo);
-        storeService.deleteReviewInSummary(review);
     }
 }
