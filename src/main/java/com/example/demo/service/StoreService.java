@@ -65,28 +65,9 @@ public class StoreService {
         summary.increaseStoreKeywordCounts(newReview.getKeywords());
     }
 
+    @Transactional
     public void deleteReviewInSummary(Review review){
         String storeId = review.getStoreId();
-        StoreSummary summary = storeSummaryRepository.findById(storeId)
-                .orElse(new StoreSummary(storeId));
-
-        Long reviewCount = reviewRepository.countByStoreId(storeId).get();
-
-        double starRate = reviewCount != 0 ?
-                (summary.getStarRate() * (reviewCount+1) - review.getStarCount()) / (reviewCount) : 0;
-
-        starRate = Math.round(starRate * 10) / 10;
-
-        decreaseStoreKeywordCounts(summary, review.getKeywords());
-        StoreSummary updatedSummary = StoreSummary.builder()
-                .storeId(storeId)
-                .starRate(starRate)
-                .reviewCount(reviewCount)
-                .storeKeywords(summary.getStoreKeywords())
-                .build();
-
-        storeSummaryRepository.save(updatedSummary);
-    }
 
     private void increaseStoreKeywordCounts(StoreSummary summary, List<Keyword> keywords) {
         List<StoreKeyword> storeKeywords = summary.getStoreKeywords();
