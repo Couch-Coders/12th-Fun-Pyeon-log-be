@@ -68,48 +68,11 @@ public class StoreService {
     @Transactional
     public void deleteReviewInSummary(Review review){
         String storeId = review.getStoreId();
+        StoreSummary summary = storeSummaryRepository.findById(storeId).orElse(null);
+        if (summary == null)
+            return;
 
-    private void increaseStoreKeywordCounts(StoreSummary summary, List<Keyword> keywords) {
-        List<StoreKeyword> storeKeywords = summary.getStoreKeywords();
-
-        Map<String, StoreKeyword> storeKeywordMap = new HashMap<>();
-        for (StoreKeyword sk : storeKeywords)
-            storeKeywordMap.put(sk.getKeywordContent().getKeywordContent(), sk);
-
-        for (Keyword k : keywords) {
-            String content = k.getKeywordContent().getKeywordContent();
-            if (!storeKeywordMap.containsKey(content)) {
-                storeKeywordMap.put(content, StoreKeyword.builder()
-                        .keywordCount(1l)
-                        .keywordContent(k.getKeywordContent())
-                        .storeSummary(summary).build());
-                storeKeywords.add(storeKeywordMap.get(content));
-                continue;
-            }
-            storeKeywordMap.get(content).increaseKeywordCount();
-        }
-    }
-
-    private void decreaseStoreKeywordCounts(StoreSummary summary, List<Keyword> keywords){
-        List<StoreKeyword> storeKeywords = summary.getStoreKeywords();
-
-        Map<String, StoreKeyword> storeKeywordMap = new HashMap<>();
-        for (StoreKeyword sk : storeKeywords)
-            storeKeywordMap.put(sk.getKeywordContent().getKeywordContent(), sk);
-
-        for (Keyword k : keywords) {
-            String content = k.getKeywordContent().getKeywordContent();
-            if (!storeKeywordMap.containsKey(content))
-                continue;
-            storeKeywordMap.get(content).decreaseKeywordCount();
-        }
-
-        storeKeywords.removeAll(storeKeywords);
-        for (StoreKeyword sk : storeKeywordMap.values()) {
-            if (sk.getKeywordCount() > 0)
-                storeKeywords.add(sk);
-            else
-                storeKeywordRepository.deleteById(sk.getStoreKeywordNo());
-        }
+        summary.deleteStarCount(review.getStarCount());
+        summary.decreaseStoreKeywordCounts(review.getKeywords());
     }
 }
