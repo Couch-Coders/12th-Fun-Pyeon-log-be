@@ -66,4 +66,9 @@ public class StoreSummary {
         this.starRate = (double) Math.round(starRate * 10) / 10;
         this.reviewCount++;
     }
+
+    public void modifyStarCount(double gap) {
+        double starRate = (getStarRate() * reviewCount + gap) / reviewCount;
+        this.starRate = (double) Math.round(starRate * 10) / 10;
+    }
 }
