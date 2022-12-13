@@ -41,19 +41,18 @@ public class StoreSummary {
     }
 
     public List<String> getKeywordContents(int keywordsSizeLimit){
-        List<String> keywords = new ArrayList<>();
-        if (storeKeywords.size() >= keywordsSizeLimit)
-            storeKeywords = storeKeywords.subList(0, keywordsSizeLimit);
-        for (int i=0 ; i<storeKeywords.size() ; i++)
-            keywords.add(storeKeywords.get(i).getKeywordContent().getKeywordContent());
-        return keywords;
+        return storeKeywords.stream()
+                .filter(storeKeyword -> storeKeyword.getKeywordCount() > 0)
+                .map(storeKeyword -> storeKeyword.getKeywordContent().getKeywordContent())
+                .limit(keywordsSizeLimit)
+                .toList();
     }
 
     public List<String> getKeywordContents(){
-        List<String> keywords = new ArrayList<>();
-        for (int i=0 ; i<storeKeywords.size() ; i++)
-            keywords.add(storeKeywords.get(i).getKeywordContent().getKeywordContent());
-        return keywords;
+        return storeKeywords.stream()
+                        .filter(storeKeyword -> storeKeyword.getKeywordCount() > 0)
+                        .map(storeKeyword -> storeKeyword.getKeywordContent().getKeywordContent())
+                        .toList();
     }
 
     public void sortByKeywordCount(){
