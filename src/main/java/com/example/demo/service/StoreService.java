@@ -1,25 +1,23 @@
 package com.example.demo.service;
 
 import com.example.demo.dto.StoreSummaryDTO;
-import com.example.demo.entity.StoreSummary;
-import com.example.demo.repository.ReviewRepository;
-import com.example.demo.repository.StoreSummaryRepository;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.example.demo.entity.*;
+import com.example.demo.repository.*;
+import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @Service
+@AllArgsConstructor
 public class StoreService {
 
-    @Autowired
     ReviewRepository reviewRepository;
-    @Autowired
     StoreSummaryRepository storeSummaryRepository;
+    StoreKeywordRepository storeKeywordRepository;
 
     public List<StoreSummaryDTO> getStoreSummaries(String[] storeIds) {
         List<StoreSummary> storeSummaries = storeSummaryRepository.findAllByStoreIdIn(storeIds);
@@ -35,8 +33,46 @@ public class StoreService {
 
     public StoreSummaryDTO getStoreSummary(String storeId) {
         StoreSummary storeSummary = storeSummaryRepository.findById(storeId)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "존재하지 않는 편의점입니다."));
+                .orElse(null);
+        if (storeSummary == null)
+            return new StoreSummaryDTO(new StoreSummary(storeId));
         storeSummary.sortByKeywordCount();
         return new StoreSummaryDTO(storeSummary, 5);
+    }
+
+    @Transactional
+    public void addReviewInSummary(Review review){
+        String storeId = review.getStoreId();
+        StoreSummary summary = storeSummaryRepository.findById(storeId)
+                .orElse(new StoreSummary(storeId));
+
+        summary.addStarCount(review.getStarCount());
+
+        summary.increaseStoreKeywordCounts(review.getKeywords());
+        storeSummaryRepository.save(summary);
+    }
+
+    @Transactional
+    public void modifyReviewInSummary(Review newReview, Review oldReview){
+        String storeId = newReview.getStoreId();
+        StoreSummary summary = storeSummaryRepository.findById(storeId).orElse(null);
+        if (summary == null)
+            return;
+
+        double gap = newReview.getStarCount() - oldReview.getStarCount();
+        summary.modifyStarCount(gap);
+        summary.decreaseStoreKeywordCounts(oldReview.getKeywords());
+        summary.increaseStoreKeywordCounts(newReview.getKeywords());
+    }
+
+    @Transactional
+    public void deleteReviewInSummary(Review review){
+        String storeId = review.getStoreId();
+        StoreSummary summary = storeSummaryRepository.findById(storeId).orElse(null);
+        if (summary == null)
+            return;
+
+        summary.deleteStarCount(review.getStarCount());
+        summary.decreaseStoreKeywordCounts(review.getKeywords());
     }
 }

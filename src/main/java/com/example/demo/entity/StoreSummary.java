@@ -4,9 +4,7 @@ import lombok.Builder;
 import lombok.Getter;
 
 import javax.persistence.*;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 
 @Entity
 @Getter
@@ -43,16 +41,75 @@ public class StoreSummary {
     }
 
     public List<String> getKeywordContents(int keywordsSizeLimit){
-        List<String> keywords = new ArrayList<>();
-        if (storeKeywords.size() >= keywordsSizeLimit)
-            storeKeywords = storeKeywords.subList(0, keywordsSizeLimit);
-        for (int i=0 ; i<storeKeywords.size() ; i++)
-            keywords.add(storeKeywords.get(i).getKeywordContent().getKeywordContent());
-        return keywords;
+        return storeKeywords.stream()
+                .filter(storeKeyword -> storeKeyword.getKeywordCount() > 0)
+                .map(storeKeyword -> storeKeyword.getKeywordContent().getKeywordContent())
+                .limit(keywordsSizeLimit)
+                .toList();
+    }
+
+    public List<String> getKeywordContents(){
+        return storeKeywords.stream()
+                        .filter(storeKeyword -> storeKeyword.getKeywordCount() > 0)
+                        .map(storeKeyword -> storeKeyword.getKeywordContent().getKeywordContent())
+                        .toList();
     }
 
     public void sortByKeywordCount(){
         Collections.sort(storeKeywords, (o1, o2) -> (int) -(o1.getKeywordCount() - o2.getKeywordCount()));
     }
 
+    public void addStarCount(double starCount){
+        double starRate = reviewCount != 0 ?
+                (getStarRate() * (reviewCount) + starCount) / (reviewCount+1) : starCount;
+        this.starRate = (double) Math.round(starRate * 10) / 10;
+        this.reviewCount++;
+    }
+
+    public void modifyStarCount(double gap) {
+        double starRate = (getStarRate() * reviewCount + gap) / reviewCount;
+        this.starRate = (double) Math.round(starRate * 10) / 10;
+    }
+
+    public void deleteStarCount(double starCount) {
+        double starRate = (getStarRate() * reviewCount - starCount) / (reviewCount-1);
+        this.starRate = (double) Math.round(starRate * 10) / 10;
+        this.reviewCount--;
+    }
+
+
+    public void increaseStoreKeywordCounts(List<Keyword> keywords) {
+        List<StoreKeyword> storeKeywords = getStoreKeywords();
+
+        Map<String, StoreKeyword> storeKeywordMap = new HashMap<>();
+        for (StoreKeyword sk : storeKeywords)
+            storeKeywordMap.put(sk.getKeywordContent().getKeywordContent(), sk);
+
+        for (Keyword k : keywords) {
+            String content = k.getKeywordContent().getKeywordContent();
+            if (!storeKeywordMap.containsKey(content)) {
+                storeKeywordMap.put(content, StoreKeyword.builder()
+                        .keywordCount(1l)
+                        .keywordContent(k.getKeywordContent())
+                        .storeSummary(this).build());
+                storeKeywords.add(storeKeywordMap.get(content));
+                continue;
+            }
+            storeKeywordMap.get(content).increaseKeywordCount();
+        }
+    }
+    public void decreaseStoreKeywordCounts(List<Keyword> keywords){
+        List<StoreKeyword> storeKeywords = getStoreKeywords();
+
+        Map<String, StoreKeyword> storeKeywordMap = new HashMap<>();
+        for (StoreKeyword sk : storeKeywords)
+            storeKeywordMap.put(sk.getKeywordContent().getKeywordContent(), sk);
+
+        for (Keyword k : keywords) {
+            String content = k.getKeywordContent().getKeywordContent();
+            if (!storeKeywordMap.containsKey(content))
+                continue;
+            storeKeywordMap.get(content).decreaseKeywordCount();
+        }
+    }
 }

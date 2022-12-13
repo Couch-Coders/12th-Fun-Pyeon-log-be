@@ -25,7 +25,7 @@ public class StoreSummaryDTO {
         this.storeId = storeSummary.getStoreId();
         this.StarCount = storeSummary.getStarRate();
         this.reviewCount = storeSummary.getReviewCount();
-        this.keywordList = storeSummary.getKeywordContents(3);
+        this.keywordList = storeSummary.getKeywordContents();
     }
 
     public StoreSummaryDTO(StoreSummary storeSummary, int keywordsSizeLimit) {
@@ -33,15 +33,5 @@ public class StoreSummaryDTO {
         this.StarCount = storeSummary.getStarRate();
         this.reviewCount = storeSummary.getReviewCount();
         this.keywordList = storeSummary.getKeywordContents(keywordsSizeLimit);
-    }
-
-    public void setKeywordList(List<String> keywordList, int keywordsSizeLimit) {
-        int keywordsSize = keywordList.size();
-        int cutCount = keywordsSizeLimit > keywordsSize ? keywordsSize : keywordsSizeLimit;
-        keywordList.subList(0, cutCount);
-        this.keywordList = keywordList;
-    }
-
-    public StoreSummaryDTO() {
     }
 }
