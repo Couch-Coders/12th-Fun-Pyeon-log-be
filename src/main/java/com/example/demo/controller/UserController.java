@@ -54,11 +54,11 @@ public class UserController {
     }
 
     @DeleteMapping("")
-    public ResponseEntity<String> deleteUser(HttpServletRequest request) {
+    public ResponseEntity<String> deleteUser(HttpServletRequest request) throws FirebaseAuthException {
         String token = findCookie(request, AuthConsts.accessTokenKey);
         FirebaseTokenDTO tokenDTO = authService.verifyIdToken(token);
-
         userService.deleteUser(tokenDTO.getEmail());
+        authService.revokeRefreshTokens(tokenDTO.getUid());
         return ResponseEntity.ok()
                 .header(HttpHeaders.SET_COOKIE, removeCookie(AuthConsts.accessTokenKey).toString())
                 .build();
