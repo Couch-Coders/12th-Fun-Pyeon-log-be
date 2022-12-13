@@ -78,4 +78,25 @@ public class StoreSummary {
         this.reviewCount--;
     }
 
+
+    public void increaseStoreKeywordCounts(List<Keyword> keywords) {
+        List<StoreKeyword> storeKeywords = getStoreKeywords();
+
+        Map<String, StoreKeyword> storeKeywordMap = new HashMap<>();
+        for (StoreKeyword sk : storeKeywords)
+            storeKeywordMap.put(sk.getKeywordContent().getKeywordContent(), sk);
+
+        for (Keyword k : keywords) {
+            String content = k.getKeywordContent().getKeywordContent();
+            if (!storeKeywordMap.containsKey(content)) {
+                storeKeywordMap.put(content, StoreKeyword.builder()
+                        .keywordCount(1l)
+                        .keywordContent(k.getKeywordContent())
+                        .storeSummary(this).build());
+                storeKeywords.add(storeKeywordMap.get(content));
+                continue;
+            }
+            storeKeywordMap.get(content).increaseKeywordCount();
+        }
+    }
 }
