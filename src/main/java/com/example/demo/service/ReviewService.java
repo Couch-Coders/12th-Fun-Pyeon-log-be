@@ -4,7 +4,6 @@ import com.example.demo.dto.ReviewDTO;
 import com.example.demo.entity.*;
 import com.example.demo.repository.*;
 import lombok.AllArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -30,7 +29,7 @@ public class ReviewService {
 
     @Transactional
     public void createReview(ReviewDTO reviewDTO, String storeId) {
-        User user = userRepository.findById(reviewDTO.getUserEntryNo())
+        User user = userRepository.findByEmail(reviewDTO.getUserEmail())
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST, "존재하지 않는 유저입니다!"));
 
         Review review = Review.builder()
@@ -67,7 +66,7 @@ public class ReviewService {
     }
     @Transactional
     public void modifyReview(String storeId, Long reviewEntryNo, ReviewDTO reviewDTO) {
-        User user = userRepository.findById(reviewDTO.getUserEntryNo())
+        User user = userRepository.findByEmail(reviewDTO.getUserEmail())
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST, "존재하지 않는 유저입니다!"));
 
         Review review = reviewRepository.findById(reviewEntryNo)
