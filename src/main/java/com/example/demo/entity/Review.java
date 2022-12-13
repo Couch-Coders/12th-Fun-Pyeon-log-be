@@ -28,7 +28,7 @@ public class Review extends BaseTimeEntity {
     @JoinColumn(name = "user_entry_no")
     User user;
 
-    @OneToMany(mappedBy = "review", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "review", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     List<Keyword> keywords;
 
     @Builder

@@ -34,6 +34,10 @@ public class StoreKeyword {
         this.keywordCount++;
     }
 
+    public void decreaseKeywordCount() {
+        this.keywordCount--;
+    }
+
     public StoreKeyword() {
     }
 }

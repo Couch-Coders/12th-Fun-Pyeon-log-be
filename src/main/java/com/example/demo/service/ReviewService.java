@@ -3,6 +3,7 @@ package com.example.demo.service;
 import com.example.demo.dto.ReviewDTO;
 import com.example.demo.entity.*;
 import com.example.demo.repository.*;
+import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
@@ -16,21 +17,14 @@ import java.util.List;
 import java.util.Map;
 
 @Service
+@AllArgsConstructor
 public class ReviewService {
 
-    @Autowired
     ReviewRepository reviewRepository;
-    @Autowired
     UserRepository userRepository;
-    @Autowired
     KeywordRepository keywordRepository;
-    @Autowired
     KeywordContentRepository keywordContentRepository;
-    @Autowired
-    StoreSummaryRepository storeSummaryRepository;
-
-    @Autowired
-    StoreKeywordRepository storeKeywordRepository;
+    StoreService storeService;
 
     private Map<String, KeywordContent> allKeywordContentMap;
 
@@ -61,6 +55,7 @@ public class ReviewService {
             review.getKeywords().add(keyword);
         }
         reviewRepository.save(review);
+        storeService.addReviewInSummary(review);
     }
 
     public List<ReviewDTO> getReviews(String storeId, Pageable pageable) {
@@ -81,7 +76,7 @@ public class ReviewService {
         Review oldReview = new Review();
         oldReview.modifyReview(review);
 
-        keywordRepository.deleteByStoreId(storeId);
+        keywordRepository.deleteByReview_ReviewEntryNo(review.getReviewEntryNo());
         review.modifyReview(Review.builder()
                 .reviewEntryNo(reviewEntryNo)
                 .reviewContent(reviewDTO.getReviewContent())
@@ -89,8 +84,7 @@ public class ReviewService {
                 .storeId(storeId)
                 .user(user)
                 .keywords(new ArrayList<>())
-                .build()
-        );
+                .build());
 
         reviewDTO.removeSameKeyword();
         if (!isUsableKeywordContents(reviewDTO.getKeywords()))
@@ -105,7 +99,19 @@ public class ReviewService {
                     .build();
             review.getKeywords().add(keyword);
         }
+
         reviewRepository.save(review);
+        storeService.modifyReviewInSummary(review, oldReview);
+    }
+
+    @Transactional
+    public void deleteReview(String storeId, Long reviewEntryNo) {
+        Review review = reviewRepository.findById(reviewEntryNo).orElse(null);
+        if (review == null)
+            return;
+
+        reviewRepository.deleteById(reviewEntryNo);
+        storeService.deleteReviewInSummary(review);
     }
 
     private void setAllKeywordContents() {
@@ -124,9 +130,5 @@ public class ReviewService {
 
     private KeywordContent getKeywordContent(String keywordContent){
         return this.allKeywordContentMap.get(keywordContent);
-    }
-
-    public void deleteReview(String storeId, Long reviewEntryNo) {
-        reviewRepository.deleteById(reviewEntryNo);
     }
 }
