@@ -28,8 +28,8 @@ public class ReviewService {
     private Map<String, KeywordContent> allKeywordContentMap;
 
     @Transactional
-    public void createReview(ReviewDTO reviewDTO, String storeId) {
-        User user = userRepository.findByEmail(reviewDTO.getUserEmail())
+    public void createReview(ReviewDTO reviewDTO, String storeId, String userEmail) {
+        User user = userRepository.findByEmail(userEmail)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST, "존재하지 않는 유저입니다!"));
 
         Review review = Review.builder()
