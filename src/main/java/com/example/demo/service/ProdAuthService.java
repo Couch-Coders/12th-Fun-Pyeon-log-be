@@ -2,6 +2,7 @@ package com.example.demo.service;
 
 import com.example.demo.dto.FirebaseTokenDTO;
 import com.example.demo.entity.User;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseAuthException;
 import com.google.firebase.auth.FirebaseToken;
 import lombok.extern.slf4j.Slf4j;
@@ -14,6 +15,10 @@ import org.springframework.web.server.ResponseStatusException;
 @Service
 @Profile("prod")
 public class ProdAuthService extends AbstractAuthService {
+    public ProdAuthService(FirebaseAuth firebaseAuth, UserService userService) {
+        super(firebaseAuth, userService);
+    }
+
     @Override
     public FirebaseTokenDTO verifyIdToken(String bearerToken) {
         try {
