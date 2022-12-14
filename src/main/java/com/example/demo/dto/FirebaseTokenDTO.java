@@ -10,10 +10,12 @@ public class FirebaseTokenDTO {
     String uid;
     String name;
     String email;
+    String pictureUrl;
 
     public FirebaseTokenDTO(FirebaseToken firebaseToken) {
         this.uid = firebaseToken.getUid();
         this.name = firebaseToken.getName();
         this.email = firebaseToken.getEmail();
+        this.pictureUrl = firebaseToken.getPicture();
     }
 }
