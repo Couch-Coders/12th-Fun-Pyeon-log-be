@@ -4,10 +4,8 @@ import com.example.demo.dto.StoreSummaryDTO;
 import com.example.demo.entity.*;
 import com.example.demo.repository.*;
 import lombok.AllArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.server.ResponseStatusException;
 
 import java.util.*;
 
@@ -42,10 +40,7 @@ public class StoreService {
 
     @Transactional
     public void addReviewInSummary(Review review){
-        String storeId = review.getStoreId();
-        StoreSummary summary = storeSummaryRepository.findById(storeId)
-                .orElse(new StoreSummary(storeId));
-
+        StoreSummary summary = getStoreSummary(review.getStoreId());
         summary.addStarCount(review.getStarCount());
 
         summary.increaseStoreKeywordCounts(review.getKeywords());
@@ -54,8 +49,7 @@ public class StoreService {
 
     @Transactional
     public void modifyReviewInSummary(Review newReview, Review oldReview){
-        String storeId = newReview.getStoreId();
-        StoreSummary summary = storeSummaryRepository.findById(storeId).orElse(null);
+        StoreSummary summary = getStoreSummary(newReview.getStoreId());
         if (summary == null)
             return;
 
