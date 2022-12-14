@@ -51,49 +51,23 @@ public class ReviewService {
         storeService.addReviewInSummary(review);
     }
 
-    public List<ReviewDTO> getReviews(String storeId, Pageable pageable) {
-        List<Review> reviews = reviewRepository.findByStoreId(pageable, storeId);
-        List<ReviewDTO> reviewDTOS = new ArrayList<>();
-        for (Review r : reviews)
-            reviewDTOS.add(new ReviewDTO(r));
-        return reviewDTOS;
-    }
     @Transactional
-    public void modifyReview(String storeId, Long reviewEntryNo, ReviewDTO reviewDTO) {
-        User user = userRepository.findById(reviewDTO.getReviewEntryNo())
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST, "존재하지 않는 유저입니다!"));
-
-        Review review = reviewRepository.findById(reviewEntryNo)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST, "존재하지 않는 리뷰입니다!"));
+    public void modifyReview(ReviewDTO reviewDTO) {
+        Review review = getReview(reviewDTO.getReviewEntryNo());
+        if (!review.getUser().getEmail().equals(reviewDTO.getUserEmail()))
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "올바른 유저가 아닙니다!");
 
         Review oldReview = new Review();
         oldReview.modifyReview(review);
 
-        keywordRepository.deleteByReview_ReviewEntryNo(review.getReviewEntryNo());
-        review.modifyReview(Review.builder()
-                .reviewEntryNo(reviewEntryNo)
-                .reviewContent(reviewDTO.getReviewContent())
-                .starCount(reviewDTO.getStarCount())
-                .storeId(storeId)
-                .user(user)
-                .keywords(new ArrayList<>())
-                .build());
-
         reviewDTO.removeSameKeyword();
-        if (!isUsableKeywordContents(reviewDTO.getKeywords()))
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "존재하지 않는 키워드입니다!");
+        review.modifyReview(reviewDTO);
 
-        for (String k : reviewDTO.getKeywords()) {
-            Keyword keyword = Keyword.builder()
-                    .review(review)
-                    .user(user)
-                    .storeId(storeId)
-                    .keywordContent(getKeywordContent(k))
-                    .build();
-            review.getKeywords().add(keyword);
-        }
+        keywordRepository.deleteByReview_ReviewEntryNo(review.getReviewEntryNo());
 
-        reviewRepository.save(review);
+        review.initKeywords();
+        review.addAllKeywords(keywordContentService.getAllKeywordContent(reviewDTO.getKeywords()));
+
         storeService.modifyReviewInSummary(review, oldReview);
     }
 
