@@ -75,4 +75,9 @@ public class StoreService {
         summary.deleteStarCount(review.getStarCount());
         summary.decreaseStoreKeywordCounts(review.getKeywords());
     }
+
+    public StoreSummary getStoreSummary(String storeId) {
+        return storeSummaryRepository.findById(storeId)
+                .orElse(new StoreSummary(storeId));
+    }
 }
