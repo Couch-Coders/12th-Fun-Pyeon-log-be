@@ -107,5 +107,8 @@ public class ReviewService {
         storeService.deleteReviewInSummary(review);
     }
 
+    public Review getReview(Long reviewEntryNo){
+        return reviewRepository.findById(reviewEntryNo)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST, "리뷰가 존재하지 않습니다."));
     }
 }
