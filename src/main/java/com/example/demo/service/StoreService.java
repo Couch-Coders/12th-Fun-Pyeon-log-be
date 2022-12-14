@@ -12,8 +12,6 @@ import java.util.*;
 @Service
 @AllArgsConstructor
 public class StoreService {
-
-    ReviewRepository reviewRepository;
     StoreSummaryRepository storeSummaryRepository;
 
     public List<StoreSummaryDTO> getStoreSummaryDTOS(String[] storeIds) {
