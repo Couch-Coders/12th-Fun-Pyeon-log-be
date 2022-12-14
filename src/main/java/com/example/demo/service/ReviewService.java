@@ -59,11 +59,12 @@ public class ReviewService {
 
         Review oldReview = new Review();
         oldReview.modifyReview(review);
-
+        
         reviewDTO.removeSameKeyword();
         review.modifyReview(reviewDTO);
 
         keywordRepository.deleteByReview_ReviewEntryNo(review.getReviewEntryNo());
+
 
         review.initKeywords();
         review.addAllKeywords(keywordContentService.getAllKeywordContent(reviewDTO.getKeywords()));
@@ -72,11 +73,8 @@ public class ReviewService {
     }
 
     @Transactional
-    public void deleteReview(String storeId, Long reviewEntryNo) {
-        Review review = reviewRepository.findById(reviewEntryNo).orElse(null);
-        if (review == null)
-            return;
-
+    public void deleteReview(Long reviewEntryNo) {
+        Review review = getReview(reviewEntryNo);
         reviewRepository.deleteById(reviewEntryNo);
         storeService.deleteReviewInSummary(review);
     }
