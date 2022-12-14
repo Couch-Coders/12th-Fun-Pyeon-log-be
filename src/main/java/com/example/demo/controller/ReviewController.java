@@ -27,22 +27,27 @@ public class ReviewController {
     public ResponseEntity<String> addReview(@RequestBody ReviewDTO reviewDTO,
                                             @PathVariable String storeId,
                                             @AuthenticationPrincipal User user){
-        reviewService.createReview(reviewDTO, storeId, user.getEmail());
+        reviewDTO.setStoreId(storeId);
+        reviewDTO.setUserEmail(user.getEmail());
+        reviewService.createReview(reviewDTO);
         return ResponseEntity.ok().build();
     }
 
     @PutMapping("/{reviewEntryNo}")
     public ResponseEntity<String> modifyReview(@PathVariable String storeId,
                                                @PathVariable Long reviewEntryNo,
-                                               @RequestBody ReviewDTO reviewDTO){
-        reviewService.modifyReview(storeId, reviewEntryNo, reviewDTO);
+                                               @RequestBody ReviewDTO reviewDTO,
+                                               @AuthenticationPrincipal User user){
+        reviewDTO.setReviewEntryNo(reviewEntryNo);
+        reviewDTO.setStoreId(storeId);
+        reviewDTO.setUserEmail(user.getEmail());
+        reviewService.modifyReview(reviewDTO);
         return ResponseEntity.ok().build();
     }
 
     @DeleteMapping("/{reviewEntryNo}")
-    public ResponseEntity<String> deleteReview(@PathVariable String storeId,
-                                               @PathVariable Long reviewEntryNo){
-        reviewService.deleteReview(storeId, reviewEntryNo);
+    public ResponseEntity<String> deleteReview(@PathVariable Long reviewEntryNo){
+        reviewService.deleteReview(reviewEntryNo);
         return ResponseEntity.ok().build();
     }
 }
