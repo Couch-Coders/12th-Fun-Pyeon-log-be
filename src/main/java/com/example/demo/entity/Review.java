@@ -56,6 +56,14 @@ public class Review extends BaseTimeEntity {
         this.user = review.getUser();
         this.keywords = review.getKeywords();
     }
+
+    public void modifyReview(ReviewDTO reviewDTO) {
+        this.reviewEntryNo = reviewDTO.getReviewEntryNo();
+        this.reviewContent = reviewDTO.getReviewContent();
+        this.starCount = reviewDTO.getStarCount();
+        this.storeId = reviewDTO.getStoreId();
+    }
+
     public void addAllKeywords(List<KeywordContent> allKeywordContent) {
         for (KeywordContent kc : allKeywordContent) {
             Keyword keyword = Keyword.builder()
