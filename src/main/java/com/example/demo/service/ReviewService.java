@@ -113,21 +113,5 @@ public class ReviewService {
         storeService.deleteReviewInSummary(review);
     }
 
-    private void setAllKeywordContents() {
-        allKeywordContentMap = new HashMap<>();
-        for (KeywordContent kc : keywordContentRepository.findAll())
-            allKeywordContentMap.put(kc.getKeywordContent(), kc);
-    }
-
-    private boolean isUsableKeywordContents(List<String> keywords) {
-        setAllKeywordContents();
-        for (String k : keywords)
-            if (!this.allKeywordContentMap.containsKey(k))
-                return false;
-        return true;
-    }
-
-    private KeywordContent getKeywordContent(String keywordContent){
-        return this.allKeywordContentMap.get(keywordContent);
     }
 }
