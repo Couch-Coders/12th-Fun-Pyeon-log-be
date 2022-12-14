@@ -15,9 +15,8 @@ public class StoreService {
 
     ReviewRepository reviewRepository;
     StoreSummaryRepository storeSummaryRepository;
-    StoreKeywordRepository storeKeywordRepository;
 
-    public List<StoreSummaryDTO> getStoreSummaries(String[] storeIds) {
+    public List<StoreSummaryDTO> getStoreSummaryDTOS(String[] storeIds) {
         List<StoreSummary> storeSummaries = storeSummaryRepository.findAllByStoreIdIn(storeIds);
         List<StoreSummaryDTO> storeSummaryDTOS = new ArrayList<>();
 
@@ -29,11 +28,9 @@ public class StoreService {
         return storeSummaryDTOS;
     }
 
-    public StoreSummaryDTO getStoreSummary(String storeId) {
+    public StoreSummaryDTO getStoreSummaryDTO(String storeId) {
         StoreSummary storeSummary = storeSummaryRepository.findById(storeId)
-                .orElse(null);
-        if (storeSummary == null)
-            return new StoreSummaryDTO(new StoreSummary(storeId));
+                .orElse(new StoreSummary(storeId));
         storeSummary.sortByKeywordCount();
         return new StoreSummaryDTO(storeSummary, 5);
     }
