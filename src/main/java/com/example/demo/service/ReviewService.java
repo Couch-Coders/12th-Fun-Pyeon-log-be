@@ -25,6 +25,13 @@ public class ReviewService {
     UserService userService;
     KeywordContentService keywordContentService;
 
+    public List<ReviewDTO> getReviews(String storeId, Pageable pageable) {
+        List<Review> reviews = reviewRepository.findByStoreId(pageable, storeId);
+        List<ReviewDTO> reviewDTOS = new ArrayList<>();
+        for (Review r : reviews)
+            reviewDTOS.add(new ReviewDTO(r));
+        return reviewDTOS;
+    }
 
     @Transactional
     public void createReview(ReviewDTO reviewDTO) {
@@ -32,24 +39,14 @@ public class ReviewService {
         Review review = Review.builder()
                 .reviewContent(reviewDTO.getReviewContent())
                 .starCount(reviewDTO.getStarCount())
-                .storeId(storeId)
+                .storeId(reviewDTO.getStoreId())
                 .user(user)
                 .keywords(new ArrayList<>())
                 .build();
 
         reviewDTO.removeSameKeyword();
-        for (String k : reviewDTO.getKeywords()) {
-            KeywordContent keywordContent = keywordContentRepository.findByKeywordContent(k)
-                    .orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST, "존재하지 않는 키워드입니다!"));
+        review.addAllKeywords(keywordContentService.getAllKeywordContent(reviewDTO.getKeywords()));
 
-            Keyword keyword = Keyword.builder()
-                    .review(review)
-                    .user(user)
-                    .storeId(storeId)
-                    .keywordContent(keywordContent)
-                    .build();
-            review.getKeywords().add(keyword);
-        }
         reviewRepository.save(review);
         storeService.addReviewInSummary(review);
     }
