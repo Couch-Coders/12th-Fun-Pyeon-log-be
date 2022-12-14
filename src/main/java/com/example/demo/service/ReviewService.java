@@ -21,11 +21,10 @@ public class ReviewService {
 
     ReviewRepository reviewRepository;
     KeywordRepository keywordRepository;
-    KeywordContentRepository keywordContentRepository;
     StoreService storeService;
     UserService userService;
+    KeywordContentService keywordContentService;
 
-    private Map<String, KeywordContent> allKeywordContentMap;
 
     @Transactional
     public void createReview(ReviewDTO reviewDTO) {
