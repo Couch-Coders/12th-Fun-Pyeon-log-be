@@ -44,12 +44,33 @@ public class Review extends BaseTimeEntity {
     public Review() {
     }
 
-    public void modifyReview(Review review) {
-        this.reviewEntryNo = review.getReviewEntryNo();
+    public Review(Review review) {
         this.reviewContent = review.getReviewContent();
         this.starCount = review.getStarCount();
         this.storeId = review.getStoreId();
         this.user = review.getUser();
         this.keywords = review.getKeywords();
+    }
+
+    public void initKeywords() {
+        this.keywords = new ArrayList<>();
+    }
+
+    public void modifyReview(ReviewDTO reviewDTO) {
+        this.reviewContent = reviewDTO.getReviewContent();
+        this.starCount = reviewDTO.getStarCount();
+        this.storeId = reviewDTO.getStoreId();
+    }
+
+    public void addAllKeywords(List<KeywordContent> allKeywordContent) {
+        for (KeywordContent kc : allKeywordContent) {
+            Keyword keyword = Keyword.builder()
+                    .review(this)
+                    .user(this.user)
+                    .storeId(this.getStoreId())
+                    .keywordContent(kc)
+                    .build();
+            this.getKeywords().add(keyword);
+        }
     }
 }

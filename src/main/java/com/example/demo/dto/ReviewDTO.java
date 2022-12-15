@@ -18,7 +18,7 @@ public class ReviewDTO {
     Double starCount;
     LocalDateTime createdDate;
     LocalDateTime modifiedDate;
-    Long userEntryNo;
+    String userEmail;
     String storeId;
     List<String> keywords;
 
@@ -31,7 +31,7 @@ public class ReviewDTO {
         this.starCount = review.getStarCount();
         this.createdDate = review.getCreatedDate();
         this.modifiedDate = review.getModifiedDate();
-        this.userEntryNo = review.getUser().getUserEntryNo();
+        this.userEmail = review.getUser().getEmail();
         this.storeId = review.getStoreId();
         castKeywordsToStrings(review.getKeywords());
     }

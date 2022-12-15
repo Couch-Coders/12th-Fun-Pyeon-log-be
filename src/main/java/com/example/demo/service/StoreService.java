@@ -4,22 +4,17 @@ import com.example.demo.dto.StoreSummaryDTO;
 import com.example.demo.entity.*;
 import com.example.demo.repository.*;
 import lombok.AllArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.server.ResponseStatusException;
 
 import java.util.*;
 
 @Service
 @AllArgsConstructor
 public class StoreService {
-
-    ReviewRepository reviewRepository;
     StoreSummaryRepository storeSummaryRepository;
-    StoreKeywordRepository storeKeywordRepository;
 
-    public List<StoreSummaryDTO> getStoreSummaries(String[] storeIds) {
+    public List<StoreSummaryDTO> getStoreSummaryDTOS(String[] storeIds) {
         List<StoreSummary> storeSummaries = storeSummaryRepository.findAllByStoreIdIn(storeIds);
         List<StoreSummaryDTO> storeSummaryDTOS = new ArrayList<>();
 
@@ -31,21 +26,16 @@ public class StoreService {
         return storeSummaryDTOS;
     }
 
-    public StoreSummaryDTO getStoreSummary(String storeId) {
+    public StoreSummaryDTO getStoreSummaryDTO(String storeId) {
         StoreSummary storeSummary = storeSummaryRepository.findById(storeId)
-                .orElse(null);
-        if (storeSummary == null)
-            return new StoreSummaryDTO(new StoreSummary(storeId));
+                .orElse(new StoreSummary(storeId));
         storeSummary.sortByKeywordCount();
         return new StoreSummaryDTO(storeSummary, 5);
     }
 
     @Transactional
     public void addReviewInSummary(Review review){
-        String storeId = review.getStoreId();
-        StoreSummary summary = storeSummaryRepository.findById(storeId)
-                .orElse(new StoreSummary(storeId));
-
+        StoreSummary summary = getStoreSummary(review.getStoreId());
         summary.addStarCount(review.getStarCount());
 
         summary.increaseStoreKeywordCounts(review.getKeywords());
@@ -54,8 +44,7 @@ public class StoreService {
 
     @Transactional
     public void modifyReviewInSummary(Review newReview, Review oldReview){
-        String storeId = newReview.getStoreId();
-        StoreSummary summary = storeSummaryRepository.findById(storeId).orElse(null);
+        StoreSummary summary = getStoreSummary(newReview.getStoreId());
         if (summary == null)
             return;
 
@@ -74,5 +63,10 @@ public class StoreService {
 
         summary.deleteStarCount(review.getStarCount());
         summary.decreaseStoreKeywordCounts(review.getKeywords());
+    }
+
+    public StoreSummary getStoreSummary(String storeId) {
+        return storeSummaryRepository.findById(storeId)
+                .orElse(new StoreSummary(storeId));
     }
 }
