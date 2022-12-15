@@ -57,8 +57,7 @@ public class ReviewService {
         if (!review.getUser().getEmail().equals(reviewDTO.getUserEmail()))
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "올바른 유저가 아닙니다!");
 
-        Review oldReview = new Review();
-        oldReview.modifyReview(review);
+        Review oldReview = new Review(review);
         
         reviewDTO.removeSameKeyword();
         review.modifyReview(reviewDTO);
