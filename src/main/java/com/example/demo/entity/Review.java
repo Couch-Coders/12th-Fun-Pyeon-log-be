@@ -44,12 +44,7 @@ public class Review extends BaseTimeEntity {
     public Review() {
     }
 
-    public void initKeywords() {
-        this.keywords = new ArrayList<>();
-    }
-
-    public void modifyReview(Review review) {
-        this.reviewEntryNo = review.getReviewEntryNo();
+    public Review(Review review) {
         this.reviewContent = review.getReviewContent();
         this.starCount = review.getStarCount();
         this.storeId = review.getStoreId();
