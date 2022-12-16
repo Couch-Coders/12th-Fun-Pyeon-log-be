@@ -17,6 +17,9 @@ public abstract class FirebaseTokenFilter extends OncePerRequestFilter {
     protected FirebaseAuth firebaseAuth;
 
     protected String findCookie(Cookie[] cookies, String cookieName) {
+        log.info("findCookie started in FirebaseTokenFilter");
+        if (cookies == null)
+            log.info("cookies is null in FirebaseTokenFilter");
         for (Cookie c : cookies) {
             if (c.getName().equals(cookieName)) {
                 log.info(cookieName + " : " + c.getValue());
