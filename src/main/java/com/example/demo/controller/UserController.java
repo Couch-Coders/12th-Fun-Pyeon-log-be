@@ -54,8 +54,14 @@ public class UserController {
     @DeleteMapping("/me")
     public ResponseEntity<String> logout(HttpServletRequest request) throws FirebaseAuthException {
         String token = findCookie(request, AuthConsts.accessTokenKey);
+        log.info("=========파이어베이스 토큰 유효성 검사 전=========");
+        log.info(token);
+        log.info("=========파이어베이스 토큰 유효성 검사 전=========");
         FirebaseTokenDTO tokenDTO = authService.verifyIdToken(token);
 
+        log.info("=========파이어베이스 토큰 유효성 검사 후=========");
+        log.info(findCookie(request, AuthConsts.accessTokenKey));
+        log.info("=========파이어베이스 토큰 유효성 검사 후=========");
         authService.revokeRefreshTokens(tokenDTO.getUid());
         return ResponseEntity.ok()
                 .header(HttpHeaders.SET_COOKIE, removeCookie(AuthConsts.accessTokenKey).toString())
