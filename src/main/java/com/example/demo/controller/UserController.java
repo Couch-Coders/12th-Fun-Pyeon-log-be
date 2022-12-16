@@ -106,7 +106,10 @@ public class UserController {
     }
 
     public String findCookie(HttpServletRequest request, String name) {
+        log.info("findCookie started in UserController");
         Cookie[] cookies = request.getCookies();
+        if (cookies == null)
+            log.info("cookies is null in FirebaseTokenFilter");
         for (Cookie c : cookies) {
             if (c.getName().equals(name))
                 return c.getName();
