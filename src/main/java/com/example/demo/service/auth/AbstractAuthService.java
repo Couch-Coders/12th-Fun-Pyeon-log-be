@@ -1,7 +1,8 @@
-package com.example.demo.service;
+package com.example.demo.service.auth;
 
 import com.example.demo.dto.FirebaseTokenDTO;
 import com.example.demo.entity.User;
+import com.example.demo.service.UserService;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseAuthException;
 import lombok.AllArgsConstructor;
@@ -13,7 +14,6 @@ import org.springframework.stereotype.Service;
 @Service
 @AllArgsConstructor
 public abstract class AbstractAuthService {
-    FirebaseAuth firebaseAuth;
     UserService userService;
 
     public abstract FirebaseTokenDTO verifyIdToken(String bearerToken);
