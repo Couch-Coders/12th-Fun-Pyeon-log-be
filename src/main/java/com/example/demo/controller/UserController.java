@@ -71,7 +71,13 @@ public class UserController {
     @DeleteMapping("")
     public ResponseEntity<String> deleteUser(HttpServletRequest request) throws FirebaseAuthException {
         String token = findCookie(request, AuthConsts.accessTokenKey);
+        log.info("=========파이어베이스 토큰 유효성 검사 전=========");
+        log.info(token);
+        log.info("=========파이어베이스 토큰 유효성 검사 전=========");
         FirebaseTokenDTO tokenDTO = authService.verifyIdToken(token);
+        log.info("=========파이어베이스 토큰 유효성 검사 후=========");
+        log.info(findCookie(request, AuthConsts.accessTokenKey));
+        log.info("=========파이어베이스 토큰 유효성 검사 후=========");
         userService.deleteUser(tokenDTO.getEmail());
         authService.revokeRefreshTokens(tokenDTO.getUid());
         return ResponseEntity.ok()
