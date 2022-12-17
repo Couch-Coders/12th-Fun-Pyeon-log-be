@@ -41,11 +41,15 @@ public class StoreService {
 
     @Transactional
     public void addReviewInSummary(Review review){
-        StoreSummary summary = getStoreSummary(review.getStoreId());
-        summary.addStarCount(review.getStarCount());
-
-        summary.increaseStoreKeywordCounts(review.getKeywords());
-        storeSummaryRepository.save(summary);
+        StoreSummary summary;
+        try {
+            summary = getStoreSummary(review.getStoreId());
+        } catch (ResponseStatusException e) {
+            summary = createStoreSummary(review.getStoreId());
+            storeSummaryRepository.save(summary);
+            log.error(review.getStoreId() + " is not exist, create store-summary : {}" + e.getMessage());
+        }
+        summary.addReview(review);
     }
 
     @Transactional
