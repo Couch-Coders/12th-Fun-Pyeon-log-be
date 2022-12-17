@@ -16,13 +16,17 @@ public class StoreService {
 
     public List<StoreSummaryDTO> getStoreSummaryDTOS(String[] storeIds) {
         List<StoreSummary> storeSummaries = storeSummaryRepository.findAllByStoreIdIn(storeIds);
-        List<StoreSummaryDTO> storeSummaryDTOS = new ArrayList<>();
+        List<StoreSummaryDTO> storeSummaryDTOS = convertStoreSummaryDTOS(storeSummaries);
 
+        return storeSummaryDTOS;
+    }
+
+    private List<StoreSummaryDTO> convertStoreSummaryDTOS(List<StoreSummary> storeSummaries) {
+        List<StoreSummaryDTO> storeSummaryDTOS = new ArrayList<>();
         for (StoreSummary storeSummary : storeSummaries) {
             storeSummary.sortByKeywordCount();
             storeSummaryDTOS.add(new StoreSummaryDTO(storeSummary));
         }
-
         return storeSummaryDTOS;
     }
 
