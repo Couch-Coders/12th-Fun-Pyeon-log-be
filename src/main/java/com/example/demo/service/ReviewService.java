@@ -11,9 +11,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 @Service
 @AllArgsConstructor
@@ -51,7 +49,7 @@ public class ReviewService {
     @Transactional
     public void modifyReview(ReviewDTO reviewDTO) {
         Review review = getReview(reviewDTO.getReviewEntryNo());
-        if (!review.getUser().getEmail().equals(reviewDTO.getUserEmail()))
+        if (!review.isSameUserEmail(reviewDTO.getUserEmail()))
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "올바른 유저가 아닙니다!");
 
         Review oldReview = new Review(review);
