@@ -51,6 +51,12 @@ public class StoreSummary {
         decreaseStoreKeywordCounts(oldReview.getKeywords());
         increaseStoreKeywordCounts(review.getKeywords());
     }
+
+    public void deleteReview(Review review) {
+        deleteStarCount(review.getStarCount());
+        decreaseStoreKeywordCounts(review.getKeywords());
+    }
+
     public List<String> getKeywordContents(int keywordsSizeLimit){
         return storeKeywords.stream()
                 .filter(storeKeyword -> storeKeyword.getKeywordCount() > 0)
