@@ -24,27 +24,13 @@ public class StoreService {
     }
 
     public StoreSummaryDTO getStoreSummaryDTO(String storeId) {
-        StoreSummary summary;
-        try {
-            summary = getStoreSummary(storeId);
-        } catch (ResponseStatusException e) {
-            summary = createStoreSummary(storeId);
-            storeSummaryRepository.save(summary);
-            log.error(storeId + " is not exist, create store-summary : {}" + e.getMessage());
-        }
+        StoreSummary summary = getOrCreateStoreSummary(storeId);
         return new StoreSummaryDTO(summary, 5);
     }
 
     @Transactional
     public void addReviewInSummary(Review review){
-        StoreSummary summary;
-        try {
-            summary = getStoreSummary(review.getStoreId());
-        } catch (ResponseStatusException e) {
-            summary = createStoreSummary(review.getStoreId());
-            storeSummaryRepository.save(summary);
-            log.error(review.getStoreId() + " is not exist, create store-summary : {}" + e.getMessage());
-        }
+        StoreSummary summary = getOrCreateStoreSummary(review.getStoreId());
         summary.addReview(review);
     }
 
