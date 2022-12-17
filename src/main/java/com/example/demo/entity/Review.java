@@ -68,7 +68,8 @@ public class Review extends BaseTimeEntity {
         this.storeId = reviewDTO.getStoreId();
     }
 
-    public void addAllKeywords(List<KeywordContent> allKeywordContent) {
+    public void initAllKeywords(List<KeywordContent> allKeywordContent) {
+        initKeywords();
         for (KeywordContent kc : allKeywordContent) {
             Keyword keyword = Keyword.builder()
                     .review(this)
