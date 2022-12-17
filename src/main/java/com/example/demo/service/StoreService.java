@@ -88,5 +88,13 @@ public class StoreService {
         }
         return storeSummaries;
     }
+
+    private List<StoreSummaryDTO> convertStoreSummaryDTOS(List<StoreSummary> storeSummaries) {
+        List<StoreSummaryDTO> storeSummaryDTOS = new ArrayList<>();
+        for (StoreSummary storeSummary : storeSummaries) {
+            storeSummary.sortByKeywordCount();
+            storeSummaryDTOS.add(new StoreSummaryDTO(storeSummary));
+        }
+        return storeSummaryDTOS;
     }
 }
