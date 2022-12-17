@@ -52,6 +52,12 @@ public class Review extends BaseTimeEntity {
         this.keywords = review.getKeywords();
     }
 
+    public boolean isSameUserEmail(String email){
+        if (email == null)
+            return false;
+        return this.getUser().getEmail().equals(email);
+    }
+
     public void initKeywords() {
         this.keywords = new ArrayList<>();
     }
