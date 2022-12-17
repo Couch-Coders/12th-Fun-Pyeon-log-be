@@ -64,18 +64,20 @@ public class ReviewService {
     }
 
     @Transactional
-    public void deleteReview(Long reviewEntryNo) {
+    public void deleteReview(Long reviewEntryNo, String userEmail) {
         Review review = getReview(reviewEntryNo);
+        if (!review.isSameUserEmail(userEmail))
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "올바른 유저가 아닙니다!");
         reviewRepository.deleteById(reviewEntryNo);
         storeService.deleteReviewInSummary(review);
     }
 
-    public Review getReview(Long reviewEntryNo){
+    public Review getReview(Long reviewEntryNo) {
         return reviewRepository.findById(reviewEntryNo)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST, "리뷰가 존재하지 않습니다."));
     }
 
-    private List<ReviewDTO> convertToReviewDTOS(List<Review> reviews) {
+    private List<ReviewDTO> convertReviewDTOS(List<Review> reviews) {
         List<ReviewDTO> reviewDTOS = new ArrayList<>();
         for (Review r : reviews) {
             reviewDTOS.add(new ReviewDTO(r));
