@@ -51,13 +51,7 @@ public class StoreService {
     @Transactional
     public void modifyReviewInSummary(Review newReview, Review oldReview){
         StoreSummary summary = getStoreSummary(newReview.getStoreId());
-        if (summary == null)
-            return;
-
-        double gap = newReview.getStarCount() - oldReview.getStarCount();
-        summary.modifyStarCount(gap);
-        summary.decreaseStoreKeywordCounts(oldReview.getKeywords());
-        summary.increaseStoreKeywordCounts(newReview.getKeywords());
+        summary.modifyReview(newReview, oldReview);
     }
 
     @Transactional
