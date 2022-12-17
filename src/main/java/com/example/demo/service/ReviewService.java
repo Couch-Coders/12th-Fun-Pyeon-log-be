@@ -42,7 +42,7 @@ public class ReviewService {
                 .build();
 
         reviewDTO.removeSameKeyword();
-        review.addAllKeywords(keywordContentService.getAllKeywordContent(reviewDTO.getKeywords()));
+        review.initAllKeywords(keywordContentService.getAllKeywordContent(reviewDTO.getKeywords()));
 
         reviewRepository.save(review);
         storeService.addReviewInSummary(review);
