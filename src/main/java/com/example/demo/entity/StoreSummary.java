@@ -44,6 +44,13 @@ public class StoreSummary {
         addStarCount(review.getStarCount());
         increaseStoreKeywordCounts(review.getKeywords());
     }
+
+    public void modifyReview(Review review, Review oldReview) {
+        double gap = review.getStarCount() - oldReview.getStarCount();
+        modifyStarCount(gap);
+        decreaseStoreKeywordCounts(oldReview.getKeywords());
+        increaseStoreKeywordCounts(review.getKeywords());
+    }
     public List<String> getKeywordContents(int keywordsSizeLimit){
         return storeKeywords.stream()
                 .filter(storeKeyword -> storeKeyword.getKeywordCount() > 0)
