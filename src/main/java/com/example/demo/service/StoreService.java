@@ -12,32 +12,27 @@ import org.springframework.web.server.ResponseStatusException;
 
 import java.util.*;
 
+@Slf4j
 @Service
 @AllArgsConstructor
 public class StoreService {
     StoreSummaryRepository storeSummaryRepository;
 
     public List<StoreSummaryDTO> getStoreSummaryDTOS(String[] storeIds) {
-        List<StoreSummary> storeSummaries = storeSummaryRepository.findAllByStoreIdIn(storeIds);
-        List<StoreSummaryDTO> storeSummaryDTOS = convertStoreSummaryDTOS(storeSummaries);
-
-        return storeSummaryDTOS;
-    }
-
-    private List<StoreSummaryDTO> convertStoreSummaryDTOS(List<StoreSummary> storeSummaries) {
-        List<StoreSummaryDTO> storeSummaryDTOS = new ArrayList<>();
-        for (StoreSummary storeSummary : storeSummaries) {
-            storeSummary.sortByKeywordCount();
-            storeSummaryDTOS.add(new StoreSummaryDTO(storeSummary));
-        }
-        return storeSummaryDTOS;
+        List<StoreSummary> storeSummaries = getOrCreateStoreSummaries(storeIds);
+        return convertStoreSummaryDTOS(storeSummaries);
     }
 
     public StoreSummaryDTO getStoreSummaryDTO(String storeId) {
-        StoreSummary storeSummary = storeSummaryRepository.findById(storeId)
-                .orElse(new StoreSummary(storeId));
-        storeSummary.sortByKeywordCount();
-        return new StoreSummaryDTO(storeSummary, 5);
+        StoreSummary summary;
+        try {
+            summary = getStoreSummary(storeId);
+        } catch (ResponseStatusException e) {
+            summary = createStoreSummary(storeId);
+            storeSummaryRepository.save(summary);
+            log.error(storeId + " is not exist, create store-summary : {}" + e.getMessage());
+        }
+        return new StoreSummaryDTO(summary, 5);
     }
 
     @Transactional
