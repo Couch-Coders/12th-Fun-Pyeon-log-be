@@ -82,4 +82,12 @@ public class ReviewService {
         return reviewRepository.findById(reviewEntryNo)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST, "리뷰가 존재하지 않습니다."));
     }
+
+    private List<ReviewDTO> convertToReviewDTOS(List<Review> reviews) {
+        List<ReviewDTO> reviewDTOS = new ArrayList<>();
+        for (Review r : reviews) {
+            reviewDTOS.add(new ReviewDTO(r));
+        }
+        return reviewDTOS;
+    }
 }
