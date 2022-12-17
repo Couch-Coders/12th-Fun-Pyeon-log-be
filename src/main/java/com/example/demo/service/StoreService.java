@@ -56,13 +56,8 @@ public class StoreService {
 
     @Transactional
     public void deleteReviewInSummary(Review review){
-        String storeId = review.getStoreId();
-        StoreSummary summary = storeSummaryRepository.findById(storeId).orElse(null);
-        if (summary == null)
-            return;
-
-        summary.deleteStarCount(review.getStarCount());
-        summary.decreaseStoreKeywordCounts(review.getKeywords());
+        StoreSummary summary = getStoreSummary(review.getStoreId());
+        summary.deleteReview(review);
     }
 
     public StoreSummary getStoreSummary(String storeId) throws ResponseStatusException {
