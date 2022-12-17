@@ -40,6 +40,10 @@ public class StoreSummary {
     public StoreSummary() {
     }
 
+    public void addReview(Review review) {
+        addStarCount(review.getStarCount());
+        increaseStoreKeywordCounts(review.getKeywords());
+    }
     public List<String> getKeywordContents(int keywordsSizeLimit){
         return storeKeywords.stream()
                 .filter(storeKeyword -> storeKeyword.getKeywordCount() > 0)
