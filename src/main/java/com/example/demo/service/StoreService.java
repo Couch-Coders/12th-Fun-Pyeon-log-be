@@ -4,6 +4,7 @@ import com.example.demo.dto.StoreSummaryDTO;
 import com.example.demo.entity.*;
 import com.example.demo.repository.*;
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -71,6 +72,21 @@ public class StoreService {
 
     private StoreSummary createStoreSummary(String storeId) {
         return new StoreSummary(storeId);
+    }
+
+    private List<StoreSummary> getOrCreateStoreSummaries(String[] storeIds){
+        List<StoreSummary> storeSummaries = storeSummaryRepository.findAllByStoreIdIn(storeIds);
+        Map<String, StoreSummary> storeSummaryMap = new HashMap<>();
+        for (StoreSummary summary : storeSummaries) {
+            storeSummaryMap.put(summary.getStoreId(), summary);
+        }
+
+        for (String storeId : storeIds) {
+            if (!storeSummaryMap.containsKey(storeId)) {
+                storeSummaries.add(createStoreSummary(storeId));
+            }
+        }
+        return storeSummaries;
     }
     }
 }
