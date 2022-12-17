@@ -27,10 +27,7 @@ public class ReviewService {
 
     public List<ReviewDTO> getReviews(String storeId, Pageable pageable) {
         List<Review> reviews = reviewRepository.findByStoreId(pageable, storeId);
-        List<ReviewDTO> reviewDTOS = new ArrayList<>();
-        for (Review r : reviews)
-            reviewDTOS.add(new ReviewDTO(r));
-        return reviewDTOS;
+        return convertReviewDTOS(reviews);
     }
 
     @Transactional
