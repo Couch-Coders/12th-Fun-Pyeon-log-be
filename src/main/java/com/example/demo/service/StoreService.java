@@ -84,6 +84,18 @@ public class StoreService {
         return storeSummaries;
     }
 
+    private StoreSummary getOrCreateStoreSummary(String storeId) {
+        StoreSummary summary;
+        try {
+            summary = getStoreSummary(storeId);
+        } catch (ResponseStatusException e) {
+            summary = createStoreSummary(storeId);
+            storeSummaryRepository.save(summary);
+            log.error(storeId + " is not exist, create store-summary : {}" + e.getMessage());
+        }
+        return summary;
+    }
+
     private List<StoreSummaryDTO> convertStoreSummaryDTOS(List<StoreSummary> storeSummaries) {
         List<StoreSummaryDTO> storeSummaryDTOS = new ArrayList<>();
         for (StoreSummary storeSummary : storeSummaries) {
