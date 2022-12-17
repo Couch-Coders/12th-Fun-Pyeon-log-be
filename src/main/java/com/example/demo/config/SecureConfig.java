@@ -1,16 +1,12 @@
 package com.example.demo.config;
 
 import com.example.demo.filter.FirebaseTokenFilter;
-import com.example.demo.filter.FirebaseTokenFilterFactory;
-import com.example.demo.filter.InterFirebaseTokenFilter;
-import com.example.demo.filter.ProdFirebaseTokenFilter;
-import com.google.firebase.auth.FirebaseAuth;
+import com.example.demo.service.auth.AuthService;
 import lombok.AllArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -23,15 +19,13 @@ public class SecureConfig {
 
     private UserDetailsService userDetailsService;
 
-    private FirebaseAuth firebaseAuth;
-
-    private FirebaseTokenFilterFactory firebaseTokenFilterFactory;
+    private AuthService authService;
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         setSecurityConfigs(http);
 
-        http.addFilterBefore(firebaseTokenFilterFactory.getInstance(userDetailsService, firebaseAuth),
+        http.addFilterBefore(new FirebaseTokenFilter(authService, userDetailsService),
                 UsernamePasswordAuthenticationFilter.class);
         return http.build();
     }

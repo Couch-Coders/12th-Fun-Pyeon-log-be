@@ -1,7 +1,7 @@
-package com.example.demo.service;
+package com.example.demo.service.auth;
 
 import com.example.demo.dto.FirebaseTokenDTO;
-import com.example.demo.entity.User;
+import com.example.demo.service.UserService;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseAuthException;
 import com.google.firebase.auth.FirebaseToken;
@@ -14,9 +14,11 @@ import org.springframework.web.server.ResponseStatusException;
 @Slf4j
 @Service
 @Profile("prod")
-public class ProdAuthService extends AbstractAuthService {
+public class ProdAuthService extends AuthService {
+    FirebaseAuth firebaseAuth;
     public ProdAuthService(FirebaseAuth firebaseAuth, UserService userService) {
-        super(firebaseAuth, userService);
+        super(userService);
+        this.firebaseAuth = firebaseAuth;
     }
 
     @Override

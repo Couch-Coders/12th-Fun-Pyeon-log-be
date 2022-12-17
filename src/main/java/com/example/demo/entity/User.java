@@ -1,7 +1,10 @@
 package com.example.demo.entity;
 
+import com.example.demo.dto.FirebaseTokenDTO;
+import com.google.firebase.auth.FirebaseToken;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.Setter;
 import lombok.ToString;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
@@ -13,8 +16,8 @@ import java.util.Collection;
 import java.util.Date;
 
 @Entity(name = "users")
-@Getter
 @ToString
+@Getter
 @EntityListeners(AuditingEntityListener.class)
 public class User implements UserDetails {
     @Id
@@ -27,6 +30,11 @@ public class User implements UserDetails {
     @CreatedDate
     Date registeredDate;
 
+    @Getter
+    @Setter
+    @Transient
+    String uid;
+
     @Builder
     public User(Long userEntryNo, String email, Date registeredDate) {
         this.userEntryNo = userEntryNo;
@@ -35,7 +43,6 @@ public class User implements UserDetails {
     }
 
     public User() {
-
     }
 
     @Override

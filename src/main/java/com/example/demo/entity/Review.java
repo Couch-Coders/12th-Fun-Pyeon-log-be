@@ -52,6 +52,12 @@ public class Review extends BaseTimeEntity {
         this.keywords = review.getKeywords();
     }
 
+    public boolean isSameUserEmail(String email){
+        if (email == null)
+            return false;
+        return this.getUser().getEmail().equals(email);
+    }
+
     public void initKeywords() {
         this.keywords = new ArrayList<>();
     }
@@ -62,7 +68,8 @@ public class Review extends BaseTimeEntity {
         this.storeId = reviewDTO.getStoreId();
     }
 
-    public void addAllKeywords(List<KeywordContent> allKeywordContent) {
+    public void initAllKeywords(List<KeywordContent> allKeywordContent) {
+        initKeywords();
         for (KeywordContent kc : allKeywordContent) {
             Keyword keyword = Keyword.builder()
                     .review(this)

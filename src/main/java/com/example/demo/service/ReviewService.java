@@ -11,9 +11,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 @Service
 @AllArgsConstructor
@@ -27,10 +25,7 @@ public class ReviewService {
 
     public List<ReviewDTO> getReviews(String storeId, Pageable pageable) {
         List<Review> reviews = reviewRepository.findByStoreId(pageable, storeId);
-        List<ReviewDTO> reviewDTOS = new ArrayList<>();
-        for (Review r : reviews)
-            reviewDTOS.add(new ReviewDTO(r));
-        return reviewDTOS;
+        return convertReviewDTOS(reviews);
     }
 
     @Transactional
@@ -45,7 +40,7 @@ public class ReviewService {
                 .build();
 
         reviewDTO.removeSameKeyword();
-        review.addAllKeywords(keywordContentService.getAllKeywordContent(reviewDTO.getKeywords()));
+        review.initAllKeywords(keywordContentService.getAllKeywordContent(reviewDTO.getKeywords()));
 
         reviewRepository.save(review);
         storeService.addReviewInSummary(review);
@@ -54,7 +49,7 @@ public class ReviewService {
     @Transactional
     public void modifyReview(ReviewDTO reviewDTO) {
         Review review = getReview(reviewDTO.getReviewEntryNo());
-        if (!review.getUser().getEmail().equals(reviewDTO.getUserEmail()))
+        if (!review.isSameUserEmail(reviewDTO.getUserEmail()))
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "올바른 유저가 아닙니다!");
 
         Review oldReview = new Review(review);
@@ -63,23 +58,30 @@ public class ReviewService {
         review.modifyReview(reviewDTO);
 
         keywordRepository.deleteByReview_ReviewEntryNo(review.getReviewEntryNo());
-
-
-        review.initKeywords();
-        review.addAllKeywords(keywordContentService.getAllKeywordContent(reviewDTO.getKeywords()));
+        review.initAllKeywords(keywordContentService.getAllKeywordContent(reviewDTO.getKeywords()));
 
         storeService.modifyReviewInSummary(review, oldReview);
     }
 
     @Transactional
-    public void deleteReview(Long reviewEntryNo) {
+    public void deleteReview(Long reviewEntryNo, String userEmail) {
         Review review = getReview(reviewEntryNo);
+        if (!review.isSameUserEmail(userEmail))
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "올바른 유저가 아닙니다!");
         reviewRepository.deleteById(reviewEntryNo);
         storeService.deleteReviewInSummary(review);
     }
 
-    public Review getReview(Long reviewEntryNo){
+    public Review getReview(Long reviewEntryNo) {
         return reviewRepository.findById(reviewEntryNo)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST, "리뷰가 존재하지 않습니다."));
+    }
+
+    private List<ReviewDTO> convertReviewDTOS(List<Review> reviews) {
+        List<ReviewDTO> reviewDTOS = new ArrayList<>();
+        for (Review r : reviews) {
+            reviewDTOS.add(new ReviewDTO(r));
+        }
+        return reviewDTOS;
     }
 }
