@@ -58,10 +58,7 @@ public class ReviewService {
         review.modifyReview(reviewDTO);
 
         keywordRepository.deleteByReview_ReviewEntryNo(review.getReviewEntryNo());
-
-
-        review.initKeywords();
-        review.addAllKeywords(keywordContentService.getAllKeywordContent(reviewDTO.getKeywords()));
+        review.initAllKeywords(keywordContentService.getAllKeywordContent(reviewDTO.getKeywords()));
 
         storeService.modifyReviewInSummary(review, oldReview);
     }
