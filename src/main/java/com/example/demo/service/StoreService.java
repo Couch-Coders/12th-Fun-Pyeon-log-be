@@ -4,8 +4,10 @@ import com.example.demo.dto.StoreSummaryDTO;
 import com.example.demo.entity.*;
 import com.example.demo.repository.*;
 import lombok.AllArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.*;
 
@@ -69,8 +71,9 @@ public class StoreService {
         summary.decreaseStoreKeywordCounts(review.getKeywords());
     }
 
-    public StoreSummary getStoreSummary(String storeId) {
+    public StoreSummary getStoreSummary(String storeId) throws ResponseStatusException {
         return storeSummaryRepository.findById(storeId)
-                .orElse(new StoreSummary(storeId));
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST, "편의점이 존재하지 않습니다."));
+    }
     }
 }
