@@ -5,6 +5,7 @@ import com.example.demo.dto.FirebaseTokenDTO;
 import com.example.demo.entity.User;
 import com.example.demo.service.auth.AuthService;
 import com.example.demo.service.UserService;
+import com.google.firebase.auth.FirebaseAuthException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
@@ -49,8 +50,9 @@ public class UserController {
     }
 
     @DeleteMapping("")
-    public ResponseEntity<String> deleteUser(@AuthenticationPrincipal User user) {
+    public ResponseEntity<String> deleteUser(@AuthenticationPrincipal User user) throws FirebaseAuthException {
         userService.deleteUser(user.getEmail());
+        authService.revokeRefreshTokens(user.getUid());
         return ResponseEntity.ok()
                 .header(HttpHeaders.SET_COOKIE, removeCookie(AuthConsts.accessTokenKey).toString())
                 .build();
