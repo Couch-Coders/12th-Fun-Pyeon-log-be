@@ -64,5 +64,9 @@ public class StoreService {
         return storeSummaryRepository.findById(storeId)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST, "편의점이 존재하지 않습니다."));
     }
+
+    private StoreSummary createStoreSummary(String storeId) {
+        return new StoreSummary(storeId);
+    }
     }
 }
