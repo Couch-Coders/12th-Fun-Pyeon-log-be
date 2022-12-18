@@ -1,8 +1,9 @@
 package com.example.demo.service;
 
 import com.example.demo.dto.StoreSummaryDTO;
-import com.example.demo.entity.*;
-import com.example.demo.repository.*;
+import com.example.demo.entity.Review;
+import com.example.demo.entity.StoreSummary;
+import com.example.demo.repository.StoreSummaryRepository;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -10,7 +11,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 @Slf4j
 @Service
@@ -67,19 +71,18 @@ public class StoreService {
         return storeSummaries;
     }
 
-    private StoreSummary getOrCreateStoreSummary(String storeId) {
+    public StoreSummary getOrCreateStoreSummary(String storeId) {
         StoreSummary summary;
         try {
             summary = getStoreSummary(storeId);
         } catch (ResponseStatusException e) {
-            summary = createStoreSummary(storeId);
-            storeSummaryRepository.save(summary);
-            log.error(storeId + " is not exist, create store-summary : {}" + e.getMessage());
+            summary = new StoreSummary(storeId);
+            log.error(storeId + " is not exist, create store-summary : " + e.getMessage());
         }
         return summary;
     }
 
-    private List<StoreSummaryDTO> convertStoreSummaryDTOS(List<StoreSummary> storeSummaries) {
+    public List<StoreSummaryDTO> convertStoreSummaryDTOS(List<StoreSummary> storeSummaries) {
         List<StoreSummaryDTO> storeSummaryDTOS = new ArrayList<>();
         for (StoreSummary storeSummary : storeSummaries) {
             storeSummary.sortByKeywordCount();
