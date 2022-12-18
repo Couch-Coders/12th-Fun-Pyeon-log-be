@@ -32,6 +32,7 @@ public class StoreService {
     public void addReviewInSummary(Review review){
         StoreSummary summary = getOrCreateStoreSummary(review.getStoreId());
         summary.addReview(review);
+        storeSummaryRepository.save(summary);
     }
 
     @Transactional
