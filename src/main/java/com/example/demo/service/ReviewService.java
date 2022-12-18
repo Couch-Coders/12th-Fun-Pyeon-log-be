@@ -2,6 +2,7 @@ package com.example.demo.service;
 
 import com.example.demo.dto.ReviewDTO;
 import com.example.demo.dto.review.ReviewCreationReqDTO;
+import com.example.demo.dto.review.ReviewModReqDTO;
 import com.example.demo.entity.*;
 import com.example.demo.repository.*;
 import lombok.AllArgsConstructor;
@@ -48,18 +49,18 @@ public class ReviewService {
     }
 
     @Transactional
-    public void modifyReview(ReviewDTO reviewDTO) {
-        Review review = getReview(reviewDTO.getReviewEntryNo());
-        if (!review.isSameUserEmail(reviewDTO.getUserEmail()))
+    public void modifyReview(ReviewModReqDTO dto) {
+        Review review = getReview(dto.getReviewEntryNo());
+        if (!review.isSameUserEmail(dto.getUserEmail()))
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "올바른 유저가 아닙니다!");
 
         Review oldReview = new Review(review);
-        
-        reviewDTO.removeSameKeyword();
-        review.modifyReview(reviewDTO);
+
+        dto.removeSameKeyword();
+        review.modifyReview(dto);
 
         keywordRepository.deleteByReview_ReviewEntryNo(review.getReviewEntryNo());
-        review.initAllKeywords(keywordContentService.getAllKeywordContent(reviewDTO.getKeywords()));
+        review.initAllKeywords(keywordContentRepository.getKeywordContentsByContent(dto.getKeywords()));
 
         storeService.modifyReviewInSummary(review, oldReview);
     }

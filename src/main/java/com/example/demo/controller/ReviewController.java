@@ -2,6 +2,7 @@ package com.example.demo.controller;
 
 import com.example.demo.dto.ReviewDTO;
 import com.example.demo.dto.review.ReviewCreationReqDTO;
+import com.example.demo.dto.review.ReviewModReqDTO;
 import com.example.demo.entity.User;
 import com.example.demo.service.ReviewService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,12 +38,12 @@ public class ReviewController {
     @PutMapping("/{reviewEntryNo}")
     public ResponseEntity<String> modifyReview(@PathVariable String storeId,
                                                @PathVariable Long reviewEntryNo,
-                                               @RequestBody ReviewDTO reviewDTO,
+                                               @RequestBody ReviewModReqDTO modDto,
                                                @AuthenticationPrincipal User user){
-        reviewDTO.setReviewEntryNo(reviewEntryNo);
-        reviewDTO.setStoreId(storeId);
-        reviewDTO.setUserEmail(user.getEmail());
-        reviewService.modifyReview(reviewDTO);
+        modDto.setReviewEntryNo(reviewEntryNo);
+        modDto.setStoreId(storeId);
+        modDto.setUserEmail(user.getEmail());
+        reviewService.modifyReview(modDto);
         return ResponseEntity.ok().build();
     }
 
