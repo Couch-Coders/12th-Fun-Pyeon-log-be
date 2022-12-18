@@ -32,6 +32,7 @@ public class KeywordContentCustomRepositoryImpl implements KeywordContentCustomR
 
     @Override
     public List<KeywordContent> getKeywordContentsByContent(List<String> contents) {
+        setAllKeywordContents();
         List<KeywordContent> keywordContents = new ArrayList<>();
         for (String content : contents) {
             KeywordContent keywordContent = allKeywordContentMap.get(content);
