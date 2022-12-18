@@ -1,6 +1,6 @@
 package com.example.demo.entity;
 
-import com.example.demo.dto.ReviewDTO;
+import com.example.demo.dto.review.ReviewModReqDTO;
 import lombok.Builder;
 import lombok.Getter;
 
@@ -62,10 +62,10 @@ public class Review extends BaseTimeEntity {
         this.keywords = new ArrayList<>();
     }
 
-    public void modifyReview(ReviewDTO reviewDTO) {
-        this.reviewContent = reviewDTO.getReviewContent();
-        this.starCount = reviewDTO.getStarCount();
-        this.storeId = reviewDTO.getStoreId();
+    public void modifyReview(ReviewModReqDTO dto) {
+        this.reviewContent = dto.getReviewContent();
+        this.starCount = dto.getStarCount();
+        this.storeId = dto.getStoreId();
     }
 
     public void initAllKeywords(List<KeywordContent> allKeywordContent) {
