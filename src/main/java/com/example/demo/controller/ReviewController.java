@@ -1,8 +1,8 @@
 package com.example.demo.controller;
 
-import com.example.demo.dto.ReviewDTO;
 import com.example.demo.dto.review.ReviewCreationReqDTO;
 import com.example.demo.dto.review.ReviewModReqDTO;
+import com.example.demo.dto.review.ReviewRespDTO;
 import com.example.demo.entity.User;
 import com.example.demo.service.ReviewService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,7 +21,7 @@ public class ReviewController {
     ReviewService reviewService;
 
     @GetMapping("")
-    public List<ReviewDTO> getReviews(@PathVariable String storeId, Pageable pageable){
+    public List<ReviewRespDTO> getReviews(@PathVariable String storeId, Pageable pageable){
         return reviewService.getReviews(storeId, pageable);
     }
 
