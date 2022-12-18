@@ -5,6 +5,7 @@ import com.example.demo.dto.review.ReviewModReqDTO;
 import com.example.demo.dto.review.ReviewRespDTO;
 import com.example.demo.entity.*;
 import com.example.demo.repository.*;
+import com.example.demo.repository.keywordcontent.KeywordContentRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
@@ -13,6 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 
 @Service
@@ -41,8 +43,8 @@ public class ReviewService {
                 .keywords(new ArrayList<>())
                 .build();
 
-        reviewDTO.removeSameKeyword();
-        review.initAllKeywords(keywordContentService.getAllKeywordContent(reviewDTO.getKeywords()));
+        dto.removeSameKeyword();
+        review.initAllKeywords(keywordContentRepository.getKeywordContentsByContent(dto.getKeywords()));
 
         reviewRepository.save(review);
         storeService.addReviewInSummary(review);

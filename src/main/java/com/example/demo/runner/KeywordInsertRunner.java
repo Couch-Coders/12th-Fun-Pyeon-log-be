@@ -1,7 +1,7 @@
 package com.example.demo.runner;
 
 import com.example.demo.entity.KeywordContent;
-import com.example.demo.repository.KeywordContentRepository;
+import com.example.demo.repository.keywordcontent.KeywordContentRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
