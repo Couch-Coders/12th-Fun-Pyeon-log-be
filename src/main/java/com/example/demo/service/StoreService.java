@@ -52,11 +52,7 @@ public class StoreService {
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST, "편의점이 존재하지 않습니다."));
     }
 
-    private StoreSummary createStoreSummary(String storeId) {
-        return new StoreSummary(storeId);
-    }
-
-    private List<StoreSummary> getOrCreateStoreSummaries(String[] storeIds){
+    public List<StoreSummary> getOrCreateStoreSummaries(String[] storeIds){
         List<StoreSummary> storeSummaries = storeSummaryRepository.findAllByStoreIdIn(storeIds);
         Map<String, StoreSummary> storeSummaryMap = new HashMap<>();
         for (StoreSummary summary : storeSummaries) {
@@ -65,7 +61,7 @@ public class StoreService {
 
         for (String storeId : storeIds) {
             if (!storeSummaryMap.containsKey(storeId)) {
-                storeSummaries.add(createStoreSummary(storeId));
+                storeSummaries.add(new StoreSummary(storeId));
             }
         }
         return storeSummaries;
