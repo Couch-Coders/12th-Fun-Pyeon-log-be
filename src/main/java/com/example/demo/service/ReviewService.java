@@ -1,6 +1,7 @@
 package com.example.demo.service;
 
 import com.example.demo.dto.ReviewDTO;
+import com.example.demo.dto.review.ReviewCreationReqDTO;
 import com.example.demo.entity.*;
 import com.example.demo.repository.*;
 import lombok.AllArgsConstructor;
@@ -29,12 +30,12 @@ public class ReviewService {
     }
 
     @Transactional
-    public void createReview(ReviewDTO reviewDTO) {
-        User user = userService.getUser(reviewDTO.getUserEmail());
+    public void createReview(ReviewCreationReqDTO dto) {
+        User user = userService.getUser(dto.getUserEmail());
         Review review = Review.builder()
-                .reviewContent(reviewDTO.getReviewContent())
-                .starCount(reviewDTO.getStarCount())
-                .storeId(reviewDTO.getStoreId())
+                .reviewContent(dto.getReviewContent())
+                .starCount(dto.getStarCount())
+                .storeId(dto.getStoreId())
                 .user(user)
                 .keywords(new ArrayList<>())
                 .build();
