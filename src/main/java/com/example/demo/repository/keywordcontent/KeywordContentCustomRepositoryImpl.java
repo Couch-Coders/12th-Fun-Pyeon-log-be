@@ -1,6 +1,7 @@
 package com.example.demo.repository.keywordcontent;
 
 import com.example.demo.entity.KeywordContent;
+import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Repository;
@@ -18,7 +19,7 @@ import java.util.Map;
 public class KeywordContentCustomRepositoryImpl implements KeywordContentCustomRepository {
 
     @Autowired
-    private EntityManager entityManager;
+    private KeywordContentBasicRepository keywordContentBasicRepository;
 
     private Map<String, KeywordContent> allKeywordContentMap;
 
@@ -53,7 +54,6 @@ public class KeywordContentCustomRepositoryImpl implements KeywordContentCustomR
     }
 
     private List<KeywordContent> findAll() {
-        return (List<KeywordContent>) entityManager.createQuery("select kc from KeywordContent kc")
-                .getResultList();
+        return keywordContentBasicRepository.findAll();
     }
 }
