@@ -11,8 +11,6 @@ public class ReviewCreationReqDTO {
 
     Double starCount;
 
-    String userEmail;
-
     String storeId;
 
     List<String> keywords;
