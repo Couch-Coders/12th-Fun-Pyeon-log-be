@@ -8,6 +8,6 @@ import org.springframework.stereotype.Repository;
 import java.util.Optional;
 
 @Repository
-public interface KeywordContentRepository extends JpaRepository<KeywordContent, Long>, KeywordContentCustomRepository {
+public interface KeywordContentRepository extends KeywordContentBasicRepository, KeywordContentCustomRepository {
     Optional<KeywordContent> findByKeywordContent(String keywordContent);
 }
