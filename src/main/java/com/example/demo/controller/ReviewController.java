@@ -30,8 +30,7 @@ public class ReviewController {
                                             @PathVariable String storeId,
                                             @AuthenticationPrincipal User user){
         creationDto.setStoreId(storeId);
-        creationDto.setUserEmail(user.getEmail());
-        reviewService.createReview(creationDto);
+        reviewService.createReview(creationDto, user.getEmail());
         return ResponseEntity.ok().build();
     }
 
