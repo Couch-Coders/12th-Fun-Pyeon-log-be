@@ -1,8 +1,11 @@
 package com.example.demo.service;
 
-import com.example.demo.dto.ReviewDTO;
+import com.example.demo.dto.review.ReviewCreationReqDTO;
+import com.example.demo.dto.review.ReviewModReqDTO;
+import com.example.demo.dto.review.ReviewRespDTO;
 import com.example.demo.entity.*;
 import com.example.demo.repository.*;
+import com.example.demo.repository.keywordcontent.KeywordContentRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
@@ -11,6 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 
 @Service
@@ -21,44 +25,44 @@ public class ReviewService {
     KeywordRepository keywordRepository;
     StoreService storeService;
     UserService userService;
-    KeywordContentService keywordContentService;
+    KeywordContentRepository keywordContentRepository;
 
-    public List<ReviewDTO> getReviews(String storeId, Pageable pageable) {
+    public List<ReviewRespDTO> getReviews(String storeId, Pageable pageable) {
         List<Review> reviews = reviewRepository.findByStoreId(pageable, storeId);
-        return convertReviewDTOS(reviews);
+        return convertReviewResponseDTOS(reviews);
     }
 
     @Transactional
-    public void createReview(ReviewDTO reviewDTO) {
-        User user = userService.getUser(reviewDTO.getUserEmail());
+    public void createReview(ReviewCreationReqDTO dto, String userEmail) {
+        User user = userService.getUser(userEmail);
         Review review = Review.builder()
-                .reviewContent(reviewDTO.getReviewContent())
-                .starCount(reviewDTO.getStarCount())
-                .storeId(reviewDTO.getStoreId())
+                .reviewContent(dto.getReviewContent())
+                .starCount(dto.getStarCount())
+                .storeId(dto.getStoreId())
                 .user(user)
                 .keywords(new ArrayList<>())
                 .build();
 
-        reviewDTO.removeSameKeyword();
-        review.initAllKeywords(keywordContentService.getAllKeywordContent(reviewDTO.getKeywords()));
+        dto.removeSameKeyword();
+        review.initAllKeywords(keywordContentRepository.getKeywordContentsByContent(dto.getKeywords()));
 
         reviewRepository.save(review);
         storeService.addReviewInSummary(review);
     }
 
     @Transactional
-    public void modifyReview(ReviewDTO reviewDTO) {
-        Review review = getReview(reviewDTO.getReviewEntryNo());
-        if (!review.isSameUserEmail(reviewDTO.getUserEmail()))
+    public void modifyReview(ReviewModReqDTO dto) {
+        Review review = getReview(dto.getReviewEntryNo());
+        if (!review.isSameUserEmail(dto.getUserEmail()))
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "올바른 유저가 아닙니다!");
 
         Review oldReview = new Review(review);
-        
-        reviewDTO.removeSameKeyword();
-        review.modifyReview(reviewDTO);
+
+        dto.removeSameKeyword();
+        review.modifyReview(dto);
 
         keywordRepository.deleteByReview_ReviewEntryNo(review.getReviewEntryNo());
-        review.initAllKeywords(keywordContentService.getAllKeywordContent(reviewDTO.getKeywords()));
+        review.initAllKeywords(keywordContentRepository.getKeywordContentsByContent(dto.getKeywords()));
 
         storeService.modifyReviewInSummary(review, oldReview);
     }
@@ -77,11 +81,10 @@ public class ReviewService {
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST, "리뷰가 존재하지 않습니다."));
     }
 
-    private List<ReviewDTO> convertReviewDTOS(List<Review> reviews) {
-        List<ReviewDTO> reviewDTOS = new ArrayList<>();
-        for (Review r : reviews) {
-            reviewDTOS.add(new ReviewDTO(r));
-        }
-        return reviewDTOS;
+    public List<ReviewRespDTO> convertReviewResponseDTOS(List<Review> reviews) {
+        return reviews.stream()
+                .sorted(Comparator.comparing(Review::getCreatedDate))
+                .map(review -> new ReviewRespDTO(review))
+                .toList();
     }
 }

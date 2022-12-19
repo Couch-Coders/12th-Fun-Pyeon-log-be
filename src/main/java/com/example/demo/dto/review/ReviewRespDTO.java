@@ -1,4 +1,4 @@
-package com.example.demo.dto;
+package com.example.demo.dto.review;
 
 import com.example.demo.entity.Keyword;
 import com.example.demo.entity.Review;
@@ -6,13 +6,11 @@ import lombok.Data;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 
 @Data
-public class ReviewDTO {
+public class ReviewRespDTO {
     Long reviewEntryNo;
     String reviewContent;
     Double starCount;
@@ -22,10 +20,10 @@ public class ReviewDTO {
     String storeId;
     List<String> keywords;
 
-    public ReviewDTO() {
+    public ReviewRespDTO() {
     }
 
-    public ReviewDTO(Review review) {
+    public ReviewRespDTO(Review review) {
         this.reviewEntryNo = review.getReviewEntryNo();
         this.reviewContent = review.getReviewContent();
         this.starCount = review.getStarCount();
@@ -45,15 +43,4 @@ public class ReviewDTO {
             this.keywords.add(k.getKeywordContent().getKeywordContent());
     }
 
-    public void removeSameKeyword() {
-        Map<String, Boolean> keywordMap = new HashMap<>();
-        List<String> newKeywords = new ArrayList<>();
-        for (String k : this.keywords) {
-            if (keywordMap.containsKey(k))
-                continue;
-            keywordMap.put(k, true);
-            newKeywords.add(k);
-        }
-        this.keywords = newKeywords;
-    }
 }

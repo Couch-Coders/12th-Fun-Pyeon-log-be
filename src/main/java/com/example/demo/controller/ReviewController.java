@@ -1,6 +1,8 @@
 package com.example.demo.controller;
 
-import com.example.demo.dto.ReviewDTO;
+import com.example.demo.dto.review.ReviewCreationReqDTO;
+import com.example.demo.dto.review.ReviewModReqDTO;
+import com.example.demo.dto.review.ReviewRespDTO;
 import com.example.demo.entity.User;
 import com.example.demo.service.ReviewService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,29 +21,28 @@ public class ReviewController {
     ReviewService reviewService;
 
     @GetMapping("")
-    public List<ReviewDTO> getReviews(@PathVariable String storeId, Pageable pageable){
+    public List<ReviewRespDTO> getReviews(@PathVariable String storeId, Pageable pageable){
         return reviewService.getReviews(storeId, pageable);
     }
 
     @PostMapping("")
-    public ResponseEntity<String> addReview(@RequestBody ReviewDTO reviewDTO,
+    public ResponseEntity<String> addReview(@RequestBody ReviewCreationReqDTO creationDto,
                                             @PathVariable String storeId,
                                             @AuthenticationPrincipal User user){
-        reviewDTO.setStoreId(storeId);
-        reviewDTO.setUserEmail(user.getEmail());
-        reviewService.createReview(reviewDTO);
+        creationDto.setStoreId(storeId);
+        reviewService.createReview(creationDto, user.getEmail());
         return ResponseEntity.ok().build();
     }
 
     @PutMapping("/{reviewEntryNo}")
     public ResponseEntity<String> modifyReview(@PathVariable String storeId,
                                                @PathVariable Long reviewEntryNo,
-                                               @RequestBody ReviewDTO reviewDTO,
+                                               @RequestBody ReviewModReqDTO modDto,
                                                @AuthenticationPrincipal User user){
-        reviewDTO.setReviewEntryNo(reviewEntryNo);
-        reviewDTO.setStoreId(storeId);
-        reviewDTO.setUserEmail(user.getEmail());
-        reviewService.modifyReview(reviewDTO);
+        modDto.setReviewEntryNo(reviewEntryNo);
+        modDto.setStoreId(storeId);
+        modDto.setUserEmail(user.getEmail());
+        reviewService.modifyReview(modDto);
         return ResponseEntity.ok().build();
     }
 
