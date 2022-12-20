@@ -83,7 +83,7 @@ public class ReviewService {
 
     public List<ReviewRespDTO> convertReviewResponseDTOS(List<Review> reviews) {
         return reviews.stream()
-                .sorted(Comparator.comparing(Review::getCreatedDate))
+                .sorted((o1, o2) -> o2.getCreatedDate().compareTo(o1.getCreatedDate()))
                 .map(review -> new ReviewRespDTO(review))
                 .toList();
     }
