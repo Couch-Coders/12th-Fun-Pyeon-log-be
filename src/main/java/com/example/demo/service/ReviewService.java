@@ -28,7 +28,7 @@ public class ReviewService {
     KeywordContentRepository keywordContentRepository;
 
     public List<ReviewRespDTO> getReviews(String storeId, Pageable pageable) {
-        List<Review> reviews = reviewRepository.findByStoreId(pageable, storeId);
+        List<Review> reviews = reviewRepository.findByStoreIdOrderByCreatedDateDesc(pageable, storeId);
         return convertReviewResponseDTOS(reviews);
     }
 
