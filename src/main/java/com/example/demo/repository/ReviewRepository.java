@@ -11,6 +11,9 @@ import java.util.Optional;
 @Repository
 public interface ReviewRepository extends JpaRepository<Review, Long> {
     List<Review> findByStoreId(Pageable pageable, String storeId);
+
+    List<Review> findByStoreIdOrderByCreatedDateDesc(Pageable pageable, String storeId);
+
     List<Review> findByStoreId(String storeId);
 
     Optional<Long> countByStoreId(String storeId);
