@@ -2,6 +2,8 @@ package com.example.demo.service;
 
 import com.example.demo.dto.UserDTO;
 import com.example.demo.entity.User;
+import com.example.demo.exception.CustomException;
+import com.example.demo.exception.ErrorCode;
 import com.example.demo.repository.UserRepository;
 import com.google.firebase.auth.FirebaseAuth;
 import lombok.AllArgsConstructor;
@@ -25,7 +27,7 @@ public class UserService implements UserDetailsService {
 
     public User getUser(String email) {
         return userRepository.findByEmail(email)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST, "존재하지 않는 유저입니다."));
+                .orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND_USER, "존재하지 않는 유저입니다."));
     }
 
     public User addUser(String email) {
