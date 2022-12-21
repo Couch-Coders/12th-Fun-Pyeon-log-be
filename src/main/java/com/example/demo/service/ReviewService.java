@@ -76,8 +76,11 @@ public class ReviewService {
     }
 
     public Review getReview(Long reviewEntryNo) {
-        return reviewRepository.findById(reviewEntryNo)
+        Review review = reviewRepository.findById(reviewEntryNo)
                 .orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND_REVIEW, "리뷰가 존재하지 않습니다."));
+        if (!review.getUser().isActiveUser())
+            throw new CustomException(ErrorCode.NOT_CORRECT_USER, "비활성화 유저입니다. 다시 로그인 해주세요.");
+        return review;
     }
 
     public List<ReviewRespDTO> convertReviewResponseDTOS(List<Review> reviews) {
