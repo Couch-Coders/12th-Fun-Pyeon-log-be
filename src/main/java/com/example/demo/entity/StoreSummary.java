@@ -89,9 +89,11 @@ public class StoreSummary {
     }
 
     public void deleteStarCount(double starCount) {
-        double starRate = (getStarRate() * reviewCount - starCount) / (reviewCount-1);
+        if (reviewCount <= 1)
+            reviewCount = 1l;
+        double starRate = reviewCount != 1 ? (getStarRate() * reviewCount - starCount) / (reviewCount-1) : 0;
         this.starRate = (double) Math.round(starRate * 10) / 10;
-        this.reviewCount--;
+        reviewCount--;
     }
 
 
