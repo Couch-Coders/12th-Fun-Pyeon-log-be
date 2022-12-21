@@ -4,17 +4,16 @@ import com.example.demo.dto.review.ReviewCreationReqDTO;
 import com.example.demo.dto.review.ReviewModReqDTO;
 import com.example.demo.dto.review.ReviewRespDTO;
 import com.example.demo.entity.*;
+import com.example.demo.exception.CustomException;
+import com.example.demo.exception.ErrorCode;
 import com.example.demo.repository.*;
 import com.example.demo.repository.keywordcontent.KeywordContentRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Pageable;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.server.ResponseStatusException;
 
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.List;
 
 @Service
@@ -54,7 +53,7 @@ public class ReviewService {
     public void modifyReview(ReviewModReqDTO dto) {
         Review review = getReview(dto.getReviewEntryNo());
         if (!review.isSameUserEmail(dto.getUserEmail()))
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "올바른 유저가 아닙니다!");
+            throw new CustomException(ErrorCode.NOT_CORRECT_USER, "리뷰를 작성한 유저가 아닙니다!");
 
         Review oldReview = new Review(review);
 
@@ -71,14 +70,14 @@ public class ReviewService {
     public void deleteReview(Long reviewEntryNo, String userEmail) {
         Review review = getReview(reviewEntryNo);
         if (!review.isSameUserEmail(userEmail))
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "올바른 유저가 아닙니다!");
+            throw new CustomException(ErrorCode.NOT_CORRECT_USER, "리뷰를 작성한 유저가 아닙니다!");
         reviewRepository.deleteById(reviewEntryNo);
         storeService.deleteReviewInSummary(review);
     }
 
     public Review getReview(Long reviewEntryNo) {
         return reviewRepository.findById(reviewEntryNo)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST, "리뷰가 존재하지 않습니다."));
+                .orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND_REVIEW, "리뷰가 존재하지 않습니다."));
     }
 
     public List<ReviewRespDTO> convertReviewResponseDTOS(List<Review> reviews) {
