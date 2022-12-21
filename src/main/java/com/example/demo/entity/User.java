@@ -54,6 +54,15 @@ public class User implements UserDetails {
             return true;
         return false;
     }
+
+    public void activateUser() {
+        this.userActiveStatus = UserActiveStatus.ACTIVE;
+    }
+
+    public void deactivateUser() {
+        this.userActiveStatus = UserActiveStatus.NOT_ACTIVE;
+    }
+
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return null;
