@@ -30,16 +30,20 @@ public class User implements UserDetails {
     @CreatedDate
     Date registeredDate;
 
+    @Column
+    UserActiveStatus userActiveStatus;
+
     @Getter
     @Setter
     @Transient
     String uid;
 
     @Builder
-    public User(Long userEntryNo, String email, Date registeredDate) {
+    public User(Long userEntryNo, String email, Date registeredDate, UserActiveStatus userActiveStatus) {
         this.userEntryNo = userEntryNo;
         this.email = email;
         this.registeredDate = registeredDate;
+        this.userActiveStatus = userActiveStatus;
     }
 
     public User() {
