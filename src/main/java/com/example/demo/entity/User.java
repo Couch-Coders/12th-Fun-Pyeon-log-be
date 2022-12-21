@@ -1,7 +1,6 @@
 package com.example.demo.entity;
 
-import com.example.demo.dto.FirebaseTokenDTO;
-import com.google.firebase.auth.FirebaseToken;
+import com.example.demo.consts.UserActiveStatus;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
@@ -30,19 +29,37 @@ public class User implements UserDetails {
     @CreatedDate
     Date registeredDate;
 
+    @Column
+    UserActiveStatus userActiveStatus;
+
     @Getter
     @Setter
     @Transient
     String uid;
 
     @Builder
-    public User(Long userEntryNo, String email, Date registeredDate) {
+    public User(Long userEntryNo, String email, Date registeredDate, UserActiveStatus userActiveStatus) {
         this.userEntryNo = userEntryNo;
         this.email = email;
         this.registeredDate = registeredDate;
+        this.userActiveStatus = userActiveStatus;
     }
 
     public User() {
+    }
+
+    public boolean isActiveUser(){
+        if (this.userActiveStatus == UserActiveStatus.ACTIVE)
+            return true;
+        return false;
+    }
+
+    public void activateUser() {
+        this.userActiveStatus = UserActiveStatus.ACTIVE;
+    }
+
+    public void deactivateUser() {
+        this.userActiveStatus = UserActiveStatus.NOT_ACTIVE;
     }
 
     @Override

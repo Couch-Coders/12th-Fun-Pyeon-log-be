@@ -32,6 +32,9 @@ public class ReviewRespDTO {
         this.userEmail = review.getUser().getEmail();
         this.storeId = review.getStoreId();
         castKeywordsToStrings(review.getKeywords());
+
+        if (!review.getUser().isActiveUser())
+            this.userEmail = "존재하지 않는 유저";
     }
 
     public void castKeywordsToStrings(List<Keyword> keywords){
