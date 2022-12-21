@@ -23,6 +23,10 @@ public abstract class AuthService {
         User user = null;
         try {
             user = userService.getUser(tokenDTO.getEmail());
+            if (!user.isActiveUser()) {
+                log.error("User \"" + user.getEmail() + "\" is not active user. activating user \"" + user.getEmail() + "\"");
+                userService.activateUser(user);
+            }
         } catch (CustomException e) {
             log.error("User with email {} was not found in the database, creating user", tokenDTO.getEmail());
             user = userService.addUser(tokenDTO.getEmail());
