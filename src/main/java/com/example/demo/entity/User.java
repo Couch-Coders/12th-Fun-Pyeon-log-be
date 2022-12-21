@@ -49,6 +49,11 @@ public class User implements UserDetails {
     public User() {
     }
 
+    public boolean isActiveUser(){
+        if (this.userActiveStatus == UserActiveStatus.ACTIVE)
+            return true;
+        return false;
+    }
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return null;
