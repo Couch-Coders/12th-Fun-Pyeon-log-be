@@ -32,7 +32,9 @@ public class UserService implements UserDetailsService {
 
     public User addUser(String email) {
         User user = User.builder()
-                .email(email).build();
+                .email(email)
+                .userActiveStatus(UserActiveStatus.ACTIVE)
+                .build();
         return userRepository.save(user);
     }
 
