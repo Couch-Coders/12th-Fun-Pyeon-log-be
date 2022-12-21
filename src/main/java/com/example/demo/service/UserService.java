@@ -48,4 +48,9 @@ public class UserService implements UserDetailsService {
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
         return userRepository.findByEmail(email).orElse(null);
     }
+
+    @Transactional
+    public void activateUser(User user) {
+        user.activateUser();
+    }
 }
