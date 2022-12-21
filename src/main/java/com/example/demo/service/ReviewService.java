@@ -33,7 +33,7 @@ public class ReviewService {
 
     @Transactional
     public void createReview(ReviewCreationReqDTO dto, String userEmail) {
-        User user = userService.getUser(userEmail);
+        User user = userService.getActiveUser(userEmail);
         Review review = Review.builder()
                 .reviewContent(dto.getReviewContent())
                 .starCount(dto.getStarCount())
