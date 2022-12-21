@@ -1,7 +1,6 @@
 package com.example.demo.entity;
 
-import com.example.demo.dto.FirebaseTokenDTO;
-import com.google.firebase.auth.FirebaseToken;
+import com.example.demo.consts.UserActiveStatus;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
