@@ -40,7 +40,8 @@ public class UserService implements UserDetailsService {
 
     @Transactional
     public void deleteUser(String email) {
-        userRepository.deleteByEmail(email);
+        User user = getUser(email);
+        user.deactivateUser();
     }
 
     @Override
