@@ -3,10 +3,11 @@ package com.example.demo.service;
 import com.example.demo.dto.StoreSummaryDTO;
 import com.example.demo.entity.Review;
 import com.example.demo.entity.StoreSummary;
+import com.example.demo.exception.CustomException;
+import com.example.demo.exception.ErrorCode;
 import com.example.demo.repository.StoreSummaryRepository;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
@@ -51,9 +52,9 @@ public class StoreService {
         summary.deleteReview(review);
     }
 
-    public StoreSummary getStoreSummary(String storeId) throws ResponseStatusException {
+    public StoreSummary getStoreSummary(String storeId) throws CustomException {
         return storeSummaryRepository.findById(storeId)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST, "편의점이 존재하지 않습니다."));
+                .orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND_STORE, "해당 편의점이 존재하지 않습니다."));
     }
 
     public List<StoreSummary> getOrCreateStoreSummaries(String[] storeIds){
@@ -75,7 +76,7 @@ public class StoreService {
         StoreSummary summary;
         try {
             summary = getStoreSummary(storeId);
-        } catch (ResponseStatusException e) {
+        } catch (CustomException e) {
             summary = new StoreSummary(storeId);
             log.error(storeId + " is not exist, create store-summary : " + e.getMessage());
         }
