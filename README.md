@@ -115,7 +115,7 @@
 <br>
 
 ## ⚙️ 시스템 아키텍처
-![아키텍쳐](https://user-images.githubusercontent.com/91148531/208930799-61b5e1a5-68f4-4641-b5f7-2cdb9473aea3.png)
+![아키텍쳐](https://user-images.githubusercontent.com/91148531/209330972-d5e40cc7-2c8a-4bec-9246-fe79db425ecd.png)
 
 
 ### ERD 설계
