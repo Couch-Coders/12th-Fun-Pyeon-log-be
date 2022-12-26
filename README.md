@@ -118,11 +118,6 @@
 ![아키텍쳐](https://user-images.githubusercontent.com/91148531/209337285-2b4ba23c-7a13-4c8a-a6cf-6310ca3e5619.png)
 
 
-### ERD 설계
-
-![erd](https://user-images.githubusercontent.com/91148531/208931076-d103ec59-8471-40ed-9625-41adc94b646e.png)
-
-
 
 ## 🛠 기획 및 설계
 
@@ -137,8 +132,12 @@
 
 [DB 명세서](https://myunghun-kang.notion.site/DB-c1ba85b611a74e75b439f9da2c68571a)
 <br>
+![erd](https://user-images.githubusercontent.com/91148531/208931076-d103ec59-8471-40ed-9625-41adc94b646e.png)
+<br>
 
 [API 명세서](https://myunghun-kang.notion.site/API-a947cc01e1e446649d8fc6e89b100108)
+<br>
+![api](https://user-images.githubusercontent.com/91148531/209513854-411ca753-8da2-4f2e-a6c7-8276b87b9afd.png)
 <br>
 
 
