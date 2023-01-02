@@ -2,7 +2,7 @@
 <p align="center"><img src="https://user-images.githubusercontent.com/91148531/209321821-f21c3ec8-0b49-4e3c-831a-886136ecf88e.png" width="100%"/></p>
 
 
-### **🏠 _배포 주소_** [https://majestic-babka-2e99ac.netlify.app/](https://majestic-babka-2e99ac.netlify.app/)
+### **🏠 _배포 주소 (배포 중)_** [https://majestic-babka-2e99ac.netlify.app/](https://majestic-babka-2e99ac.netlify.app/)
 # **나만의 편의점 찾기 플랫폼 - **Fun편log -**  (BE)**
 
 <p align="center"><img src="https://user-images.githubusercontent.com/91148531/209322976-be25100d-eb57-4432-97dd-e28c6837f10c.png" width="100%"/></p>
